@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entrar na Área VIP — Heurístika</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./static/style.css" />
+</head>
+<body>
+  <div id="cursorSpotlight" class="cursor-spotlight" aria-hidden="true"></div>
+  <div id="hkToastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- Main Header (Clean XM White Navbar) -->
+  <header class="navbar no-print">
+    <div class="container nav-inner" style="padding-top:12px; padding-bottom:12px;">
+      <a href="./index.html" class="brand">
+        <span class="brand-hex" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <rect x="2" y="2" width="20" height="20" rx="6" fill="rgba(16,185,129,0.14)" stroke="#10b981" stroke-width="1.6"/>
+            <path d="M7 15.5L10.5 11.5L13.5 13.5L17.5 8.5" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="17.5" cy="8.5" r="1.6" fill="#10b981"/>
+          </svg>
+        </span>
+        <span class="brand-name">Heurístika</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Principal" style="gap:24px;">
+        <a href="./index.html" class="nav-item ">Início</a>
+        <a href="./carteiras/" class="nav-item ">Carteiras</a>
+        <a href="./academia/" class="nav-item ">Academia</a>
+        <a href="./index.html#planos" class="nav-item">Planos</a>
+      </nav>
+
+      <div class="nav-cta">
+        
+          <a href="./login/" class="btn btn-sm btn-outline nav-btn-active">Entrar</a>
+          <a href="./index.html#planos" class="btn btn-sm btn-electric">Acesso VIP</a>
+        
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+    
+
+    
+<div class="auth-wrap">
+  <div class="panel">
+    <span class="badge badge-vip" style="margin-bottom:10px;">ÁREA DO ASSINANTE VIP</span>
+    <h1 style="margin:0 0 8px; font-size:1.5rem;">Acessar Sinais em Tempo Real</h1>
+    <p style="margin:0 0 20px; color:var(--muted); font-size:0.9rem;">
+      Entre com seu <strong>e-mail/contato</strong> cadastrado ou seu <strong>código de acesso VIP</strong>.
+    </p>
+
+    <form method="POST" action="/login">
+      <div class="field">
+        <label for="identificador">E-mail, contato ou Código VIP</label>
+        <input id="identificador" name="identificador" type="text" placeholder="Ex: cliente@exemplo.com ou VIP-DEMO-2026" required autofocus />
+      </div>
+      <button type="submit" class="btn btn-vip" style="width:100%;">Entrar no Painel VIP</button>
+    </form>
+
+    <div style="margin-top:18px; padding-top:16px; border-top:1px solid var(--border); display:flex; justify-content:space-between; font-size:0.84rem; color:var(--muted);">
+      <a href="https://seu-checkout.com/vip" target="_blank" rel="noopener" class="text-amber">Ainda não é assinante? Assinar →</a>
+      <a href="https://wa.me/5511983715318" target="_blank" rel="noopener">Suporte</a>
+    </div>
+  </div>
+</div>
+
+  </main>
+
+  <footer class="site-footer no-print">
+    <div class="container footer-inner" style="flex-wrap:wrap; gap:12px;">
+      <span>Heurístika • Heurística Financeira &amp; Auditoria Quantitativa</span>
+      <div style="display:flex; gap:14px; align-items:center; font-size:0.78rem;">
+        <a href="./admin/" style="color:var(--muted);">Painel Admin</a>
+        <a href="#pt" data-static-lang="pt" style="color:var(--muted);">PT</a>
+        <a href="#en" data-static-lang="en" style="color:var(--muted);">EN</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.hkToast = function(message, type = "success") {
+      const container = document.getElementById("hkToastContainer");
+      if (!container) return;
+      const el = document.createElement("div");
+      el.className = `hk-toast hk-toast-${type}`;
+      el.innerHTML = `<span class="hk-toast-dot"></span><span></span>`;
+      el.querySelector("span:last-child").textContent = message;
+      container.appendChild(el);
+      requestAnimationFrame(() => el.classList.add("show"));
+      setTimeout(() => {
+        el.classList.remove("show");
+        setTimeout(() => el.remove(), 240);
+      }, 2800);
+    };
+
+    window.hkCopyText = async function(text, okMsg = "Copiado para a área de transferência!") {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          ta.style.position = "fixed";
+          ta.style.opacity = "0";
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand("copy");
+          ta.remove();
+        }
+        window.hkToast(okMsg, "success");
+        return true;
+      } catch (e) {
+        window.hkToast("Não foi possível copiar automaticamente.", "warning");
+        return false;
+      }
+    };
+
+    document.addEventListener("click", (e) => {
+      const waBtn = e.target.closest(".hk-share-wa");
+      if (waBtn) {
+        const txt = waBtn.getAttribute("data-share") || "";
+        window.open("https://wa.me/?text=" + encodeURIComponent(txt), "_blank", "noopener");
+        return;
+      }
+      const tgBtn = e.target.closest(".hk-share-tg");
+      if (tgBtn) {
+        const txt = tgBtn.getAttribute("data-share") || "";
+        window.open("https://t.me/share/url?url=" + encodeURIComponent(window.location.href) + "&text=" + encodeURIComponent(txt), "_blank", "noopener");
+      }
+    });
+
+    (function initSubtleCardGlow() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const spotlight = document.getElementById("cursorSpotlight");
+      window.addEventListener("mousemove", (e) => {
+        const mx = e.clientX;
+        const my = e.clientY;
+        if (spotlight) {
+          spotlight.style.setProperty("--mx", mx + "px");
+          spotlight.style.setProperty("--my", my + "px");
+        }
+        const card = e.target.closest(".source-card, .signal-card, .plan-card, .inst-card, .terminal-window, .term-panel");
+        if (card) {
+          const rect = card.getBoundingClientRect();
+          card.style.setProperty("--cx", (mx - rect.left) + "px");
+          card.style.setProperty("--cy", (my - rect.top) + "px");
+        }
+      }, { passive: true });
+    })();
+  </script>
+
+<script id="hkStaticPagesRuntime">
+(function() {
+  window.HK_STATIC_PAGES = true;
+  const PREFIX = ".";
+  const PAGE_KIND = "login";
+  const VIP_KEY = "hk_static_vip_v1";
+  const ADMIN_KEY = "hk_static_admin_v1";
+  const STUDENT_KEY = "hk_static_student_v1";
+  const CERTS_KEY = "hk_static_certs_v1";
+  const QUESTIONS = [];
+
+  function getVipSession() {
+    try { return JSON.parse(localStorage.getItem(VIP_KEY) || "null"); }
+    catch (e) { return null; }
+  }
+
+  // Sincroniza botões de topo (Entrar vs Terminal VIP / Sair) e logout VIP
+  const vipSess = getVipSession();
+  document.querySelectorAll('[data-static-vip-logout="1"], a[href$="/logout"]').forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      try { localStorage.removeItem(VIP_KEY); } catch (err) {}
+      window.location.href = PREFIX + "/index.html";
+    });
+  });
+
+  if (vipSess) {
+    document.querySelectorAll('.nav-cta a[href$="/login/"]').forEach(a => {
+      a.textContent = "Terminal VIP";
+      a.setAttribute("href", PREFIX + "/vip/");
+      a.classList.remove("btn-outline");
+      a.classList.add("btn-electric");
+    });
+    if (PAGE_KIND === "home") {
+      document.querySelectorAll(".vip-lock-overlay").forEach(ov => {
+        const p = ov.querySelector("p");
+        if (p) p.textContent = "Seu acesso VIP está ativo! Abra o Terminal VIP para ver os parâmetros completos e o botão de compartilhar.";
+        const a = ov.querySelector("a.btn");
+        if (a) {
+          a.textContent = "Ver Sinal Liberado no Terminal VIP →";
+          a.setAttribute("href", PREFIX + "/vip/");
+        }
+      });
+      const heroCta = document.querySelector('.hero-buttons a[href="#planos"]');
+      if (heroCta) {
+        heroCta.textContent = "Abrir Terminal VIP (Sinais em Aberto) →";
+        heroCta.setAttribute("href", PREFIX + "/vip/");
+      }
+    }
+  }
+
+  // Se estiver na página demo de carteiras mas já logado como VIP/Anual, abre a versão desbloqueada
+  if (PAGE_KIND === "carteiras_demo" && vipSess) {
+    window.location.replace(PREFIX + "/carteiras/anual.html");
+    return;
+  }
+
+  // Página de Login VIP (/login/)
+  if (PAGE_KIND === "login") {
+    document.querySelectorAll('form[action$="/login"], form').forEach(form => {
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const input = form.querySelector('[name="identificador"]');
+        const raw = (input ? input.value : "").trim();
+        if (!raw || raw.length < 3) {
+          if (window.hkToast) window.hkToast("Informe seu e-mail ou código de acesso VIP.", "warning");
+          return;
+        }
+        const upper = raw.toUpperCase();
+        const validCodes = ["VIP-VITALICIO", "VITALICIO", "VIP-DEMO-2026", "ANUAL-2026", "ADMIN123", "VIP-2026", "HEURISTIKA-VIP", "LSSCHNEIDER24"];
+        const isEmail = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(raw);
+        if (!isEmail && !validCodes.includes(upper) && !upper.startsWith("VIP-")) {
+          if (window.hkToast) window.hkToast("Código inválido. Use seu código Vitalício (VIP-VITALICIO) ou e-mail cadastrado.", "warning");
+          return;
+        }
+        const subObj = {
+          nome: isEmail ? raw.split("@")[0] : "Acesso Master Vitalício",
+          contato: raw,
+          plano: "Vitalício",
+          codigo_acesso: isEmail ? "VIP-VITALICIO" : upper,
+        };
+        try { localStorage.setItem(VIP_KEY, JSON.stringify(subObj)); } catch (err) {}
+        const params = new URLSearchParams(window.location.search);
+        const next = params.get("next") || "";
+        if (next === "carteiras") {
+          window.location.href = PREFIX + "/carteiras/anual.html";
+        } else {
+          window.location.href = PREFIX + "/vip/";
+        }
+      });
+    });
+  }
+
+  // Página do Painel Admin (/admin/)
+  if (PAGE_KIND === "admin") {
+    const gate = document.getElementById("staticAdminGate");
+    const content = document.getElementById("staticAdminContent");
+    const form = document.getElementById("staticAdminLoginForm");
+    function checkAdminAuth() {
+      const ok = sessionStorage.getItem(ADMIN_KEY) === "1";
+      if (gate) gate.style.display = ok ? "none" : "block";
+      if (content) content.style.display = ok ? "block" : "none";
+    }
+    form?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const pwd = (document.getElementById("staticAdminPwd")?.value || "").trim();
+      if (pwd === "admin123") {
+        sessionStorage.setItem(ADMIN_KEY, "1");
+        checkAdminAuth();
+        if (window.hkToast) window.hkToast("Painel Administrativo desbloqueado!", "success");
+      } else {
+        if (window.hkToast) window.hkToast("Senha administrativa incorreta.", "warning");
+      }
+    });
+    document.querySelectorAll('form[action$="/admin/logout"]').forEach(f => {
+      f.addEventListener("submit", (e) => {
+        e.preventDefault();
+        sessionStorage.removeItem(ADMIN_KEY);
+        window.location.href = PREFIX + "/index.html";
+      });
+    });
+    checkAdminAuth();
+  }
+
+  // Filtro client-side de categorias na Vitrine e no Terminal VIP
+  document.querySelectorAll('a[href*="?categoria="]').forEach(link => {
+    link.addEventListener("click", (e) => {
+      const href = link.getAttribute("href") || "";
+      const m = href.match(/categoria=([^&#]+)/);
+      if (!m) return;
+      e.preventDefault();
+      const cat = decodeURIComponent(m[1].replace(/\+/g, " "));
+      document.querySelectorAll('a[href*="?categoria="]').forEach(a => {
+        a.classList.toggle("active", a === link);
+      });
+      document.querySelectorAll(".signal-card").forEach(card => {
+        const cardCat = (card.dataset.cat || card.querySelector(".badge-cat")?.textContent || "").trim();
+        if (!cardCat || card.classList.contains("module-card-item")) return;
+        card.style.display = (cat === "Todos" || cardCat.toUpperCase() === cat.toUpperCase()) ? "" : "none";
+      });
+      document.querySelectorAll("#histTable tbody tr, #vipHistTable tbody tr").forEach(row => {
+        const firstTd = row.querySelector("td");
+        const rowCat = firstTd ? firstTd.textContent.trim() : "";
+        row.style.display = (cat === "Todos" || !rowCat || rowCat.toUpperCase() === cat.toUpperCase()) ? "" : "none";
+      });
+    });
+  });
+
+  if (PAGE_KIND !== "academia") return;
+
+  function esc(s) {
+    return String(s || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function maskId(doc, email) {
+    const d = String(doc || "").trim();
+    if (d) {
+      const digits = d.replace(/\D/g, "");
+      if (digits.length === 11) return `***.${digits.slice(3, 6)}.${digits.slice(6, 9)}-**`;
+      if (d.length > 4) return `${d.slice(0, 2)}***${d.slice(-2)}`;
+      return "***";
+    }
+    const mail = String(email || "").trim();
+    if (mail.includes("@")) {
+      const [local, domain] = mail.split("@");
+      return `${local.slice(0, 2)}***@${domain}`;
+    }
+    return "Verificado";
+  }
+
+  function loadStudent() {
+    try { return JSON.parse(localStorage.getItem(STUDENT_KEY) || "null"); }
+    catch (e) { return null; }
+  }
+  function saveStudent(st) {
+    try { localStorage.setItem(STUDENT_KEY, JSON.stringify(st)); } catch (e) {}
+  }
+  function loadCerts() {
+    try { return JSON.parse(localStorage.getItem(CERTS_KEY) || "[]"); }
+    catch (e) { return []; }
+  }
+  function saveCerts(list) {
+    try { localStorage.setItem(CERTS_KEY, JSON.stringify(list)); } catch (e) {}
+  }
+
+  const cadastroEl = document.getElementById("cadastro");
+  const staticArea = document.getElementById("staticStudentArea");
+  const studentNameBadge = document.getElementById("staticStudentBadge");
+  const logoutBtn = document.getElementById("staticLogoutBtn");
+  const certsHost = document.getElementById("staticCertsHost");
+  const resultHost = document.getElementById("staticResultHost");
+  const certModal = document.getElementById("staticCertModal");
+
+  function openCertificateView(cert, student) {
+    if (!certModal) return;
+    const masked = maskId(student?.documento, student?.email);
+    certModal.innerHTML = `
+      <div class="panel cert-print-card" style="padding:36px; border:2px solid rgba(16, 185, 129, 0.55); background:radial-gradient(circle at top right, rgba(16,185,129,0.12), var(--surface) 60%); margin-bottom:28px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:22px; padding-bottom:16px; border-bottom:1px solid var(--border);">
+          <strong style="font-size:1.18rem;">Heurístika Academia Quantitativa</strong>
+          <span class="badge badge-buy">AUTENTICIDADE VERIFICADA</span>
+        </div>
+        <div class="mono" style="font-size:0.78rem; color:#34d399; letter-spacing:0.12em;">CERTIFICADO DE CONCLUSÃO &amp; PROFICIÊNCIA QUANTITATIVA</div>
+        <h2 style="margin:10px 0 16px; font-size:clamp(1.6rem, 3vw, 2.3rem);">${esc(student?.nome || "Aluno Heurístika")}</h2>
+        <p style="font-size:0.96rem; color:var(--text-soft); line-height:1.7; margin-bottom:22px;">
+          Concluiu com êxito a trilha educacional e foi aprovado(a) no <strong>Exame Avançado de Heurística Financeira, Gestão de Risco Quantitativa, Alocação Multi-Horizonte e Derivativos</strong>, obtendo aproveitamento de <strong class="text-green">${Math.round(cert.nota_pct)}% (${cert.acertos}/${cert.total} questões)</strong>.
+        </p>
+        <div class="kpi-grid" style="margin-bottom:22px;">
+          <div class="kpi-card"><div class="kpi-label">Código Verificador</div><div class="kpi-value" style="font-size:1.05rem; color:#34d399;">${esc(cert.codigo)}</div></div>
+          <div class="kpi-card"><div class="kpi-label">Data de Emissão</div><div class="kpi-value" style="font-size:1.05rem;">${esc(cert.emitido_em)}</div></div>
+          <div class="kpi-card"><div class="kpi-label">Identificação</div><div class="kpi-value" style="font-size:1.02rem;">${esc(masked)}</div></div>
+        </div>
+        <div class="no-print" style="display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap;">
+          <button type="button" class="btn btn-sm btn-electric" onclick="window.print()">Imprimir / Salvar PDF</button>
+          <button type="button" class="btn btn-sm btn-outline" id="closeStaticCertBtn">Fechar Visualização</button>
+        </div>
+      </div>
+    `;
+    certModal.style.display = "block";
+    certModal.scrollIntoView({ behavior: "smooth", block: "center" });
+    document.getElementById("closeStaticCertBtn")?.addEventListener("click", () => {
+      certModal.style.display = "none";
+    });
+  }
+
+  function renderCertsList(student) {
+    if (!certsHost) return;
+    const certs = loadCerts().filter(c => c.email === student?.email);
+    if (!certs.length) {
+      certsHost.innerHTML = "";
+      return;
+    }
+    certsHost.innerHTML = `
+      <div class="panel" style="margin-bottom:24px; border-color:rgba(16,185,129,0.4);">
+        <h2 style="margin:0 0 12px; font-size:1.15rem;">Seus Certificados Emitidos</h2>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          ${certs.map((c, idx) => `
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; background:var(--surface-2); padding:12px 14px; border-radius:10px; border:1px solid var(--border);">
+              <div>
+                <strong class="mono text-green">${esc(c.codigo)}</strong>
+                <span style="color:var(--muted); font-size:0.84rem; margin-left:8px;">Nota: ${Math.round(c.nota_pct)}% (${c.acertos}/${c.total}) • Emitido em ${esc(c.emitido_em)}</span>
+              </div>
+              <button type="button" class="btn btn-sm btn-electric open-static-cert-btn" data-cert-idx="${idx}">Abrir Certificado ↗</button>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `;
+    certsHost.querySelectorAll(".open-static-cert-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const c = certs[Number(btn.dataset.certIdx || 0)];
+        if (c) openCertificateView(c, student);
+      });
+    });
+  }
+
+  function syncAuthUi() {
+    const st = loadStudent();
+    const goExamBtns = document.querySelectorAll('a[href="#cadastro"], a[href="#prova"]');
+    if (st && st.nome && st.email) {
+      if (cadastroEl) cadastroEl.style.display = "none";
+      if (staticArea) staticArea.style.display = "block";
+      if (studentNameBadge) studentNameBadge.textContent = "ALUNO: " + String(st.nome).toUpperCase();
+      goExamBtns.forEach(a => a.setAttribute("href", "#prova"));
+      renderCertsList(st);
+    } else {
+      if (cadastroEl) cadastroEl.style.display = "";
+      if (staticArea) staticArea.style.display = "none";
+      goExamBtns.forEach(a => a.setAttribute("href", "#cadastro"));
+    }
+  }
+
+  document.querySelectorAll('form[action$="/academia/cadastro"]').forEach(form => {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const nome = (form.querySelector('[name="nome"]')?.value || "").trim();
+      const email = (form.querySelector('[name="email"]')?.value || "").trim().toLowerCase();
+      const documento = (form.querySelector('[name="documento"]')?.value || "").trim();
+      const pin = (form.querySelector('[name="pin"]')?.value || "").trim();
+      if (nome.length < 3 || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || pin.length < 4) {
+        if (window.hkToast) window.hkToast("Preencha nome completo, e-mail válido e PIN de 4+ dígitos.", "warning");
+        return;
+      }
+      saveStudent({ nome, email, documento, pin });
+      syncAuthUi();
+      if (window.hkToast) window.hkToast(`Cadastro concluído, ${nome}! Prova liberada.`, "success");
+      document.getElementById("prova")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+
+  document.querySelectorAll('form[action$="/academia/login"]').forEach(form => {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = (form.querySelector('[name="email"]')?.value || "").trim().toLowerCase();
+      const pin = (form.querySelector('[name="pin"]')?.value || "").trim();
+      const existing = loadStudent();
+      if (existing && existing.email === email && existing.pin === pin) {
+        syncAuthUi();
+        if (window.hkToast) window.hkToast(`Bem-vindo(a) de volta, ${existing.nome}!`, "success");
+        document.getElementById("prova")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else if (email.includes("@") && pin.length >= 4) {
+        const guessedName = existing?.nome || email.split("@")[0];
+        saveStudent({ nome: guessedName, email, documento: existing?.documento || "", pin });
+        syncAuthUi();
+        if (window.hkToast) window.hkToast(`Acesso liberado para ${guessedName}!`, "success");
+        document.getElementById("prova")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        if (window.hkToast) window.hkToast("Informe um e-mail válido e seu PIN de 4+ dígitos.", "warning");
+      }
+    });
+  });
+
+  logoutBtn?.addEventListener("click", () => {
+    try { localStorage.removeItem(STUDENT_KEY); } catch (e) {}
+    if (resultHost) resultHost.innerHTML = "";
+    if (certModal) certModal.style.display = "none";
+    syncAuthUi();
+    if (window.hkToast) window.hkToast("Você saiu da conta de aluno.", "success");
+  });
+
+  const examForm = document.getElementById("examForm");
+  if (examForm) {
+    examForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const st = loadStudent();
+      if (!st) {
+        if (window.hkToast) window.hkToast("Cadastre-se antes de enviar a prova.", "warning");
+        return;
+      }
+      let acertos = 0;
+      const revisao = [];
+      for (const q of QUESTIONS) {
+        const checked = examForm.querySelector(`input[name="${q.id}"]:checked`);
+        if (!checked) return;
+        const val = checked.value.toLowerCase();
+        const ok = val === q.correta;
+        if (ok) acertos++;
+        revisao.push({
+          enunciado: q.enunciado,
+          acertou: ok,
+          resposta_usuario: val.toUpperCase(),
+          correta: q.correta.toUpperCase(),
+          explicacao: q.explicacao,
+        });
+      }
+      const total = QUESTIONS.length || 10;
+      const nota_pct = Math.round((acertos / total) * 1000) / 10;
+      const aprovado = nota_pct >= 70;
+      let certObj = null;
+      if (aprovado) {
+        const hex1 = Math.floor(1000 + Math.random() * 9000).toString(16).toUpperCase();
+        const hex2 = Math.floor(1000 + Math.random() * 9000).toString(16).toUpperCase();
+        const now = new Date();
+        const dtStr = now.toLocaleDateString("pt-BR") + " " + now.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+        certObj = {
+          codigo: `CERT-HRK-${hex1}-${hex2}`,
+          nota_pct,
+          acertos,
+          total,
+          emitido_em: dtStr,
+          email: st.email,
+        };
+        const allCerts = loadCerts();
+        allCerts.unshift(certObj);
+        saveCerts(allCerts);
+        renderCertsList(st);
+      }
+
+      if (resultHost) {
+        resultHost.innerHTML = `
+          <div class="panel" style="margin-bottom:28px; border-color:${aprovado ? 'rgba(16,185,129,0.5)' : 'rgba(255,71,87,0.45)'};" id="resultado-prova">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
+              <div>
+                <span class="badge ${aprovado ? 'badge-buy' : 'badge-loss'}">
+                  ${aprovado ? 'APROVADO NA CERTIFICAÇÃO' : 'NÃO APROVADO (MÍNIMO 70%)'}
+                </span>
+                <h2 style="margin:8px 0 0;">Nota Final: ${Math.round(nota_pct)}% (${acertos}/${total})</h2>
+              </div>
+              ${certObj ? `<button type="button" class="btn btn-electric" id="viewLatestStaticCertBtn">Visualizar Certificado (${esc(certObj.codigo)})</button>` : ''}
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              ${revisao.map(r => `
+                <div style="background:var(--surface-2); padding:10px 12px; border-radius:8px; font-size:0.84rem;">
+                  <strong class="${r.acertou ? 'text-green' : 'text-red'}">${r.acertou ? '✓ CORRETA' : '✕ INCORRETA'}</strong> — ${esc(r.enunciado)}
+                  <div class="mono" style="font-size:0.76rem; color:var(--text-soft); margin-top:4px;">
+                    Sua resposta: <strong>${esc(r.resposta_usuario)}</strong>${!r.acertou ? ` • Correta: <strong class="text-green">${esc(r.correta)}</strong>` : ''}
+                  </div>
+                  <div style="color:var(--muted); margin-top:4px;">${esc(r.explicacao)}</div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `;
+        document.getElementById("viewLatestStaticCertBtn")?.addEventListener("click", () => {
+          if (certObj) openCertificateView(certObj, st);
+        });
+        document.getElementById("resultado-prova")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+      if (window.hkToast) {
+        window.hkToast(
+          aprovado
+            ? `Parabéns! Aprovado com ${Math.round(nota_pct)}%. Certificado emitido!`
+            : `Nota: ${Math.round(nota_pct)}%. Atingir 70% (7/10) para emitir certificado.`,
+          aprovado ? "success" : "warning"
+        );
+      }
+    });
+  }
+
+  syncAuthUi();
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carteiras Gerenciadas (2, 5 e 10+ anos) — Heurístika</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../static/style.css" />
+</head>
+<body>
+  <div id="cursorSpotlight" class="cursor-spotlight" aria-hidden="true"></div>
+  <div id="hkToastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- Main Header (Clean XM White Navbar) -->
+  <header class="navbar no-print">
+    <div class="container nav-inner" style="padding-top:12px; padding-bottom:12px;">
+      <a href="../index.html" class="brand">
+        <span class="brand-hex" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <rect x="2" y="2" width="20" height="20" rx="6" fill="rgba(16,185,129,0.14)" stroke="#10b981" stroke-width="1.6"/>
+            <path d="M7 15.5L10.5 11.5L13.5 13.5L17.5 8.5" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="17.5" cy="8.5" r="1.6" fill="#10b981"/>
+          </svg>
+        </span>
+        <span class="brand-name">Heurístika</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Principal" style="gap:24px;">
+        <a href="../index.html" class="nav-item ">Início</a>
+        <a href="../carteiras/" class="nav-item active">Carteiras</a>
+        <a href="../academia/" class="nav-item ">Academia</a>
+        <a href="../index.html#planos" class="nav-item">Planos</a>
+      </nav>
+
+      <div class="nav-cta">
+        
+          <a href="../login/" class="btn btn-sm btn-outline ">Entrar</a>
+          <a href="../index.html#planos" class="btn btn-sm btn-electric">Acesso VIP</a>
+        
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+    
+
+    
+<section class="container section-wrap">
+  <!-- Header Institucional -->
+  <div class="section-head" style="margin-bottom:20px;">
+    <div>
+      <div class="hero-pill" style="margin-bottom:10px;">
+        <span class="live-dot-pulse" style="display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--electric);"></span>
+        <span>VIGÊNCIA OFICIAL: 01/12/2026 • ALOCAÇÃO MULTI-HORIZONTE</span>
+      </div>
+      <h1 style="margin:0; font-size:clamp(1.65rem, 3vw, 2.35rem); letter-spacing:-0.03em;">
+        Terminal de Carteiras &amp; Simulador Patrimonial
+      </h1>
+      <p style="margin:8px 0 0; color:var(--text-soft); max-width:720px; font-size:0.95rem;">
+        Selecione horizonte e perfil para simular crescimento composto vs. CDI e calcular exatamente quanto alocar em <strong>R$</strong> em cada ativo.
+      </p>
+    </div>
+
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+      <div class="seg-group" role="tablist" aria-label="Modo de visualização">
+        <button type="button" class="seg-btn active" id="viewTerminalBtn" data-view="terminal">Terminal da Carteira</button>
+        <button type="button" class="seg-btn" id="viewMatrixBtn" data-view="matrix">Matriz 9 Carteiras</button>
+      </div>
+      
+        <button type="button" id="openAnnualPixTop" class="btn btn-sm btn-electric">Desbloquear Plano Anual (R$ 269,90)</button>
+      
+    </div>
+  </div>
+
+  
+    <div class="paywall-bar-pro">
+      <div>
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:4px;">
+          <span class="badge badge-vip">MODO SIMULADOR DEMO</span>
+          <span class="mono" style="font-size:0.74rem; color:var(--text-soft);">Vigência oficial 01/12/2026 • Plano Anual / Vitalício</span>
+        </div>
+        <div style="font-size:0.92rem; color:var(--text-soft);">
+          Explore livremente o simulador patrimonial e a macro-alocação por classe. Os <strong>tickers exatos, pesos individuais e lista de execução</strong> são exclusivos para assinantes anuais.
+        </div>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        
+          <a href="../login/?next=carteiras" class="btn btn-sm btn-outline">Já sou Assinante Anual</a>
+        
+        <button type="button" id="openAnnualPixBanner" class="btn btn-sm btn-electric">Assinar Anual via Pix</button>
+      </div>
+    </div>
+  
+
+  <!-- Formador de Carteira Passo a Passo (Wizard 1 fase por vez) -->
+  <div class="term-panel" id="portfolioBuilderPanel" style="margin-bottom:20px; border:1px solid #cbd5e1; background:#ffffff;">
+    <!-- Estado inicial compacto -->
+    <div id="pbIntroView" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;">
+      <div>
+        <div class="term-kicker" style="color:var(--electric);">ASSISTENTE INTELIGENTE • FORMADOR DE CARTEIRA</div>
+        <h2 style="margin:4px 0 2px; font-size:1.2rem;">Não sabe qual carteira escolher?</h2>
+        <p style="margin:0; font-size:0.86rem; color:var(--text-soft);">Responda 3 perguntas rápidas (uma por vez) e montamos a alocação modelo ideal para o seu perfil.</p>
+      </div>
+      <button type="button" id="pbStartBtn" class="btn btn-electric">🎯 Descobrir Minha Carteira Ideal →</button>
+    </div>
+
+    <!-- Wizard interativo (oculto até clicar) -->
+    <div id="pbWizardView" style="display:none;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <span id="pbStepLabel" class="badge badge-vip">Passo 1 de 3</span>
+        <button type="button" id="pbCancelBtn" class="btn btn-xs btn-ghost">Fechar ✕</button>
+      </div>
+      <div style="height:6px; background:#e2e8f0; border-radius:99px; overflow:hidden; margin-bottom:18px;">
+        <div id="pbProgressFill" style="height:100%; width:33%; background:#1669f2; transition:width 0.25s ease;"></div>
+      </div>
+
+      <!-- Fase 1 -->
+      <div class="pb-step" data-step="1">
+        <h3 style="margin:0 0 12px; font-size:1.08rem;">1. Quando você pretende usar este dinheiro?</h3>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:10px;">
+          <button type="button" class="btn btn-outline pb-opt-btn" data-step="1" data-val="Curto (2 anos)" style="text-align:left; padding:14px; height:auto;">
+            <strong>Curto prazo (até 2 anos)</strong><br/><span style="font-size:0.78rem; color:var(--muted); font-weight:400;">Reserva, meta próxima ou liquidez</span>
+          </button>
+          <button type="button" class="btn btn-outline pb-opt-btn" data-step="1" data-val="Médio (5 anos)" style="text-align:left; padding:14px; height:auto;">
+            <strong>Médio prazo (3 a 6 anos)</strong><br/><span style="font-size:0.78rem; color:var(--muted); font-weight:400;">Crescimento equilibrado acima do CDI</span>
+          </button>
+          <button type="button" class="btn btn-outline pb-opt-btn" data-step="1" data-val="Longo (10+ anos)" style="text-align:left; padding:14px; height:auto;">
+            <strong>Longo prazo (7 a 10+ anos)</strong><br/><span style="font-size:0.78rem; color:var(--muted); font-weight:400;">Multiplicação patrimonial no composto</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Fase 2 -->
+      <div class="pb-step" data-step="2" style="display:none;">
+        <h3 style="margin:0 0 12px; font-size:1.08rem;">2. Se sua carteira cair 15% em um mês ruim, você:</h3>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:10px;">
+          <button type="button" class="btn btn-outline pb-opt-btn" data-step="2" data-val="0" style="text-align:left; padding:14px; height:auto;">
+            <strong>Prefiro máxima segurança</strong><br/><span style="font-size:0.78rem; color:var(--muted); font-weight:400;">Fico desconfortável com quedas fortes</span>
+          </button>
+          <button type="button" class="btn btn-outline pb-opt-btn" data-step="2" data-val="1" style="text-align:left; padding:14px; height:auto;">
+            <strong>Mantenho a calma</strong><br/><span style="font-size:0.78rem; color:var(--muted); font-weight:400;">Aceito oscilações buscando superar o CDI</span>
+          </button>
+          <button type="button" class="btn btn-outline pb-opt-btn" data-step="2" data-val="2" style="text-align:left; padding:14px; height:auto;">
+            <strong>Aproveito para comprar mais</strong><br/><span style="font-size:0.78rem; color:var(--muted); font-weight:400;">Vejo quedas como oportunidade</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Fase 3 -->
+      <div class="pb-step" data-step="3" style="display:none;">
+        <h3 style="margin:0 0 12px; font-size:1.08rem;">3. Qual é a sua experiência com Ações, FIIs e Cripto?</h3>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:10px;">
+          <button type="button" class="btn btn-outline pb-opt-btn" data-step="3" data-val="0" style="text-align:left; padding:14px; height:auto;">
+            <strong>Iniciante</strong><br/><span style="font-size:0.78rem; color:var(--muted); font-weight:400;">Prefiro foco maior em Renda Fixa</span>
+          </button>
+          <button type="button" class="btn btn-outline pb-opt-btn" data-step="3" data-val="1" style="text-align:left; padding:14px; height:auto;">
+            <strong>Intermediário</strong><br/><span style="font-size:0.78rem; color:var(--muted); font-weight:400;">Já invisto em Ações ou Fundos Imobiliários</span>
+          </button>
+          <button type="button" class="btn btn-outline pb-opt-btn" data-step="3" data-val="2" style="text-align:left; padding:14px; height:auto;">
+            <strong>Experiente</strong><br/><span style="font-size:0.78rem; color:var(--muted); font-weight:400;">Aceito volatilidade global e cripto</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resultado final do Wizard -->
+    <div id="pbResultView" style="display:none;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+        <div>
+          <span id="builderResultBadge" class="badge badge-buy" style="margin-bottom:6px;">Perfil calculado</span>
+          <div id="builderExplanation" style="font-size:0.88rem; color:var(--text);"></div>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button type="button" id="pbRestartBtn" class="btn btn-sm btn-ghost">Refazer perguntas</button>
+          <button type="button" id="sharePortfolioWaBtn" class="btn btn-sm btn-electric">Compartilhar no WhatsApp</button>
+        </div>
+      </div>
+      <div style="margin-top:8px; font-size:0.72rem; color:var(--muted);">
+        Aviso educativo: enquadramento em carteiras modelo simuladas; não constitui recomendação personalizada.
+      </div>
+    </div>
+  </div>
+
+  <!-- Command Dock: Horizonte, Perfil & Simulador de Capital -->
+  <div class="term-panel wealth-dock">
+    <div class="dock-selectors">
+      <div>
+        <div class="term-kicker" style="margin-bottom:7px;">1. Horizonte de Investimento</div>
+        <div class="seg-group" id="horizonSwitcher" role="group" aria-label="Horizonte">
+          <button type="button" class="seg-btn" data-horizon="Curto (2 anos)">Curto (2 anos)</button>
+          <button type="button" class="seg-btn" data-horizon="Médio (5 anos)">Médio (5 anos)</button>
+          <button type="button" class="seg-btn" data-horizon="Longo (10+ anos)">Longo (10+ anos)</button>
+        </div>
+      </div>
+      <div>
+        <div class="term-kicker" style="margin-bottom:7px;">2. Perfil de Risco</div>
+        <div class="seg-group" id="profileSwitcher" role="group" aria-label="Perfil">
+          <button type="button" class="seg-btn" data-profile="Conservador">Conservador</button>
+          <button type="button" class="seg-btn" data-profile="Moderado">Moderado</button>
+          <button type="button" class="seg-btn" data-profile="Agressivo">Agressivo</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="dock-inputs">
+      <div class="input-group-pro">
+        <label for="capitalInicialInput">Capital Inicial (R$)</label>
+        <div class="money-input-wrap">
+          <span class="money-prefix">R$</span>
+          <input id="capitalInicialInput" type="number" min="0" step="500" value="50000" inputmode="decimal" />
+        </div>
+        <div class="preset-chips">
+          <button type="button" class="preset-chip" data-cap="10000">10k</button>
+          <button type="button" class="preset-chip" data-cap="50000">50k</button>
+          <button type="button" class="preset-chip" data-cap="100000">100k</button>
+          <button type="button" class="preset-chip" data-cap="250000">250k</button>
+        </div>
+      </div>
+
+      <div class="input-group-pro">
+        <label for="aporteMensalInput">Aporte Mensal (R$)</label>
+        <div class="money-input-wrap">
+          <span class="money-prefix">R$</span>
+          <input id="aporteMensalInput" type="number" min="0" step="100" value="2000" inputmode="decimal" />
+        </div>
+        <div class="preset-chips">
+          <button type="button" class="preset-chip" data-aporte="0">Sem aporte</button>
+          <button type="button" class="preset-chip" data-aporte="500">500</button>
+          <button type="button" class="preset-chip" data-aporte="2000">2k</button>
+          <button type="button" class="preset-chip" data-aporte="5000">5k</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW 1: TERMINAL DA CARTEIRA -->
+  <div id="terminalView">
+    <!-- 5-Card Institutional KPIs -->
+    <div class="kpi-5">
+      <div class="kpi-card-pro">
+        <div class="kpi-label">Patrimônio Projetado (<span id="kpiYearsLabel">5</span>a)</div>
+        <div class="kpi-value text-green mono tabular" id="kpiProjectedVal">R$ 0,00</div>
+        <div class="kpi-sub mono" id="kpiAlphaVsCdi">+R$ 0,00 vs CDI</div>
+      </div>
+      <div class="kpi-card-pro">
+        <div class="kpi-label">Retorno Esperado (a.a.)</div>
+        <div class="kpi-value mono tabular" id="kpiExpectedReturn">0,0%</div>
+        <div class="kpi-sub mono" id="kpiMonthlyYield">Ganho inicial est.: R$ 0/mês</div>
+      </div>
+      <div class="kpi-card-pro">
+        <div class="kpi-label">Índice de Sharpe Est.</div>
+        <div class="kpi-value text-blue mono tabular" id="kpiSharpe">0,00</div>
+        <div class="kpi-sub">Eficiência risco-retorno</div>
+      </div>
+      <div class="kpi-card-pro">
+        <div class="kpi-label">Volatilidade &amp; Drawdown</div>
+        <div class="kpi-value text-amber mono tabular" id="kpiVol">0,0%</div>
+        <div class="kpi-sub mono" id="kpiDrawdown">Max DD est.: -0,0%</div>
+      </div>
+      <div class="kpi-card-pro">
+        <div class="kpi-label">Vigência &amp; Rebalanceamento</div>
+        <div class="kpi-value mono tabular" id="kpiVigencia">01/12/2026</div>
+        <div class="kpi-sub" id="kpiRebalance">Frequência: Trimestral</div>
+      </div>
+    </div>
+
+    <!-- Analytical Split: Compound Growth Chart + Asset Class Donut -->
+    <div class="wealth-grid">
+      <!-- Left: Interactive Wealth Curve -->
+      <div class="term-panel">
+        <div class="term-panel-head">
+          <div>
+            <div class="term-kicker">SIMULADOR DE PATRIMÔNIO COMPOSTO</div>
+            <h2 class="term-title" id="chartHeading">Projeção: Médio (5 anos) • Moderado</h2>
+          </div>
+          <div class="seg-group" id="projYearsSwitcher" aria-label="Prazo da projeção">
+            <button type="button" class="seg-btn btn-xs" data-proj="2">2 Anos</button>
+            <button type="button" class="seg-btn btn-xs active" data-proj="5">5 Anos</button>
+            <button type="button" class="seg-btn btn-xs" data-proj="10">10 Anos</button>
+          </div>
+        </div>
+
+        <div class="chart-svg-wrap" id="wealthChartWrap">
+          <div class="chart-tooltip" id="wealthTooltip"></div>
+          <svg id="wealthSvg" viewBox="0 0 640 230" preserveAspectRatio="none" style="width:100%; height:100%; display:block;"></svg>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-top:10px; font-size:0.75rem; color:var(--muted);">
+          <div style="display:flex; gap:14px; flex-wrap:wrap;">
+            <span><span style="color:#10b981;">●</span> Carteira Heurístika</span>
+            <span><span style="color:#60a5fa;">▬</span> Benchmark CDI (11,25% a.a.)</span>
+            <span><span style="color:#64748b;">┈</span> Total Aportado</span>
+          </div>
+          <span class="mono">Projeção modelo • Não garante retorno futuro</span>
+        </div>
+
+        <div class="horizon-mini-grid">
+          <div class="horizon-mini-box" id="miniBox2">
+            <div class="term-kicker">Horizonte 2 Anos</div>
+            <div class="mono tabular" style="font-size:1rem; font-weight:700; margin-top:3px;" id="miniVal2">R$ 0</div>
+            <div class="mono text-green" style="font-size:0.72rem;" id="miniSub2">+0%</div>
+          </div>
+          <div class="horizon-mini-box" id="miniBox5">
+            <div class="term-kicker">Horizonte 5 Anos</div>
+            <div class="mono tabular" style="font-size:1rem; font-weight:700; margin-top:3px;" id="miniVal5">R$ 0</div>
+            <div class="mono text-green" style="font-size:0.72rem;" id="miniSub5">+0%</div>
+          </div>
+          <div class="horizon-mini-box" id="miniBox10">
+            <div class="term-kicker">Horizonte 10 Anos</div>
+            <div class="mono tabular" style="font-size:1rem; font-weight:700; margin-top:3px;" id="miniVal10">R$ 0</div>
+            <div class="mono text-green" style="font-size:0.72rem;" id="miniSub10">+0%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Asset Class Breakdown -->
+      <div class="term-panel">
+        <div class="term-panel-head">
+          <div>
+            <div class="term-kicker">DISTRIBUIÇÃO POR CLASSE DE ATIVOS</div>
+            <h2 class="term-title" id="donutHeading">Composição Estrutural</h2>
+          </div>
+          <span class="badge badge-cat mono" id="assetCountBadge">4 ativos</span>
+        </div>
+
+        <div class="stacked-bar" id="stackedBar"></div>
+
+        <div class="donut-layout">
+          <div class="donut-wrap">
+            <svg id="donutSvg" viewBox="0 0 180 180" style="width:100%; height:100%; transform:rotate(-90deg);"></svg>
+            <div class="donut-center">
+              <span class="term-kicker">ALOCADO</span>
+              <strong class="mono tabular" style="font-size:1.15rem;" id="donutCenterPct">100%</strong>
+              <span class="mono" style="font-size:0.68rem; color:var(--muted);" id="donutCenterCap">R$ 50k</span>
+            </div>
+          </div>
+
+          <div class="class-legend" id="classLegend"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Execution & Position Allocation Calculator Table -->
+    <div class="term-panel" style="margin-bottom:28px;">
+      <div class="term-panel-head">
+        <div>
+          <div class="term-kicker">CALCULADORA DE POSIÇÃO • ORDEM DE COMPRA NA CORRETORA</div>
+          <h2 class="term-title" id="tableHeading">Alocação Exata em R$ — Médio (5 anos) • Moderado</h2>
+        </div>
+
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <span class="badge badge-buy mono" id="weightSumBadge">Peso Total: 100%</span>
+          
+            <button type="button" id="openAnnualPixTable" class="btn btn-sm btn-electric">Desbloquear Tickers &amp; Ordem</button>
+          
+        </div>
+      </div>
+
+      <div class="table-wrap" style="border:none; background:transparent;">
+        <table class="alloc-table">
+          <thead>
+            <tr>
+              <th>Ativo / Ticker</th>
+              <th>Classe</th>
+              <th>Peso Alvo</th>
+              <th>Aporte Inicial (R$)</th>
+              <th>Aporte Mensal (R$)</th>
+              <th>Tese Quantitativa</th>
+            </tr>
+          </thead>
+          <tbody id="allocationTbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW 2: MATRIZ COMPARATIVA DAS 9 CARTEIRAS -->
+  <div id="matrixView" style="display:none; margin-bottom:28px;">
+    <div class="term-panel">
+      <div class="term-panel-head">
+        <div>
+          <div class="term-kicker">COMPARATIVO QUANTITATIVO • 3 HORIZONTES × 3 PERFIS</div>
+          <h2 class="term-title">Matriz das 9 Carteiras Gerenciadas (Vigência 01/12/2026)</h2>
+        </div>
+        <span class="mono" style="font-size:0.78rem; color:var(--muted);">Clique em qualquer linha para abrir no Terminal</span>
+      </div>
+      <div class="table-wrap" style="border:none;">
+        <table>
+          <thead>
+            <tr>
+              <th>Horizonte</th>
+              <th>Perfil</th>
+              <th>Retorno Est. (a.a.)</th>
+              <th>Volatilidade</th>
+              <th>Sharpe</th>
+              <th>Max Drawdown</th>
+              <th>Rebalanceamento</th>
+              <th>Patrimônio Projetado</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody id="matrixTbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <section class="disclaimer" style="margin-top:8px;">
+    <strong>Nota Metodológica &amp; Risco:</strong> Os parâmetros de retorno esperado, volatilidade, Sharpe e Max Drawdown são estimativas quantitativas baseadas em composição histórica das classes de ativos e taxa CDI de referência (11,25% a.a.). Carteiras vigentes a partir de 01/12/2026. Rentabilidade passada não garante retornos futuros.
+  </section>
+</section>
+
+<!-- Modal Pix Plano Anual -->
+
+<div id="annualPixModal" class="pix-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="annualPixTitle">
+  <div class="pix-modal">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <span class="badge badge-vip">PLANO ANUAL + CARTEIRAS 01/12/2026</span>
+      <button type="button" id="closeAnnualPix" class="btn btn-sm btn-outline" aria-label="Fechar">✕</button>
+    </div>
+    <h3 id="annualPixTitle" style="margin:0 0 6px; font-size:1.22rem;">Desbloquear as 9 Carteiras Gerenciadas</h3>
+    <p style="margin:0 0 14px; color:var(--muted); font-size:0.88rem;">
+      Valor único anual: <strong class="mono text-green">R$ 269,90/ano</strong> (inclui Terminal VIP + Telegram + Carteiras).
+    </p>
+    <div style="font-size:0.8rem; color:var(--text-soft);">
+      <div><strong>Favorecido:</strong> Heurístika Mesa Quantitativa</div>
+      <div><strong>Modalidade:</strong> Transferência Pix Instantânea (Celular)</div>
+    </div>
+    <div class="pix-key-box">
+      <code id="annualPixKey" class="mono" style="font-size:0.9rem; color:#34d399; word-break:break-all;">11983715318</code>
+      <button type="button" id="copyAnnualPixBtn" class="btn btn-sm btn-electric">Copiar Chave</button>
+    </div>
+    <a href="https://wa.me/5511983715318" target="_blank" rel="noopener" class="btn btn-electric" style="width:100%;">
+      Enviar Comprovante e Liberar Acesso
+    </a>
+  </div>
+</div>
+
+
+<script>
+(function initWealthTerminal() {
+  const HAS_ACCESS = false;
+  const PORTFOLIOS = {"Curto (2 anos)||Agressivo": {"ativos": [{"ativo": "Ativo Exclusivo #1", "categoria": "Cripto", "classe": "Cripto", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}, {"ativo": "Ativo Exclusivo #2", "categoria": "A\u00e7\u00f5es", "classe": "A\u00e7\u00f5es", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}, {"ativo": "Ativo Exclusivo #3", "categoria": "Futuros", "classe": "Hedge / Macro", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}, {"ativo": "Ativo Exclusivo #4", "categoria": "Fundos", "classe": "Renda Fixa", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}], "classes": {"A\u00e7\u00f5es": 30.0, "Cripto": 35.0, "Hedge / Macro": 20.0, "Renda Fixa": 15.0}, "horizonte": "Curto (2 anos)", "perfil": "Agressivo", "vigencia": "01/12/2026"}, "Curto (2 anos)||Conservador": {"ativos": [{"ativo": "Ativo Exclusivo #1", "categoria": "Fundos", "classe": "Renda Fixa", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}, {"ativo": "Ativo Exclusivo #2", "categoria": "Fundos", "classe": "FIIs", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}, {"ativo": "Ativo Exclusivo #3", "categoria": "\u00cdndices", "classe": "ETF / Global", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}, {"ativo": "Ativo Exclusivo #4", "categoria": "Forex", "classe": "Hedge / Macro", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}], "classes": {"ETF / Global": 10.0, "FIIs": 25.0, "Hedge / Macro": 10.0, "Renda Fixa": 55.0}, "horizonte": "Curto (2 anos)", "perfil": "Conservador", "vigencia": "01/12/2026"}, "Curto (2 anos)||Moderado": {"ativos": [{"ativo": "Ativo Exclusivo #1", "categoria": "Fundos", "classe": "Renda Fixa", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}, {"ativo": "Ativo Exclusivo #2", "categoria": "A\u00e7\u00f5es", "classe": "A\u00e7\u00f5es", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}, {"ativo": "Ativo Exclusivo #3", "categoria": "Fundos", "classe": "FIIs", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}, {"ativo": "Ativo Exclusivo #4", "categoria": "Cripto", "classe": "Cripto", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}], "classes": {"A\u00e7\u00f5es": 30.0, "Cripto": 15.0, "FIIs": 20.0, "Renda Fixa": 35.0}, "horizonte": "Curto (2 anos)", "perfil": "Moderado", "vigencia": "01/12/2026"}, "Longo (10+ anos)||Agressivo": {"ativos": [{"ativo": "Ativo Exclusivo #1", "categoria": "A\u00e7\u00f5es", "classe": "ETF / Global", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}, {"ativo": "Ativo Exclusivo #2", "categoria": "Cripto", "classe": "Cripto", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}, {"ativo": "Ativo Exclusivo #3", "categoria": "Futuros", "classe": "Hedge / Macro", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}], "classes": {"Cripto": 35.0, "ETF / Global": 45.0, "Hedge / Macro": 20.0}, "horizonte": "Longo (10+ anos)", "perfil": "Agressivo", "vigencia": "01/12/2026"}, "Longo (10+ anos)||Conservador": {"ativos": [{"ativo": "Ativo Exclusivo #1", "categoria": "Fundos", "classe": "Renda Fixa", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}, {"ativo": "Ativo Exclusivo #2", "categoria": "\u00cdndices", "classe": "ETF / Global", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}, {"ativo": "Ativo Exclusivo #3", "categoria": "Fundos", "classe": "FIIs", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}], "classes": {"ETF / Global": 35.0, "FIIs": 25.0, "Renda Fixa": 40.0}, "horizonte": "Longo (10+ anos)", "perfil": "Conservador", "vigencia": "01/12/2026"}, "Longo (10+ anos)||Moderado": {"ativos": [{"ativo": "Ativo Exclusivo #1", "categoria": "\u00cdndices", "classe": "ETF / Global", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}, {"ativo": "Ativo Exclusivo #2", "categoria": "A\u00e7\u00f5es", "classe": "A\u00e7\u00f5es", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}, {"ativo": "Ativo Exclusivo #3", "categoria": "Fundos", "classe": "FIIs", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}, {"ativo": "Ativo Exclusivo #4", "categoria": "Cripto", "classe": "Cripto", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}], "classes": {"A\u00e7\u00f5es": 25.0, "Cripto": 15.0, "ETF / Global": 40.0, "FIIs": 20.0}, "horizonte": "Longo (10+ anos)", "perfil": "Moderado", "vigencia": "01/12/2026"}, "M\u00e9dio (5 anos)||Agressivo": {"ativos": [{"ativo": "Ativo Exclusivo #1", "categoria": "\u00cdndices", "classe": "ETF / Global", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}, {"ativo": "Ativo Exclusivo #2", "categoria": "Cripto", "classe": "Cripto", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}, {"ativo": "Ativo Exclusivo #3", "categoria": "A\u00e7\u00f5es", "classe": "A\u00e7\u00f5es", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}, {"ativo": "Ativo Exclusivo #4", "categoria": "Futuros", "classe": "Hedge / Macro", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}], "classes": {"A\u00e7\u00f5es": 15.0, "Cripto": 35.0, "ETF / Global": 40.0, "Hedge / Macro": 10.0}, "horizonte": "M\u00e9dio (5 anos)", "perfil": "Agressivo", "vigencia": "01/12/2026"}, "M\u00e9dio (5 anos)||Conservador": {"ativos": [{"ativo": "Ativo Exclusivo #1", "categoria": "Fundos", "classe": "Renda Fixa", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}, {"ativo": "Ativo Exclusivo #2", "categoria": "Fundos", "classe": "FIIs", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}, {"ativo": "Ativo Exclusivo #3", "categoria": "\u00cdndices", "classe": "ETF / Global", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}, {"ativo": "Ativo Exclusivo #4", "categoria": "Futuros", "classe": "Hedge / Macro", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}], "classes": {"ETF / Global": 15.0, "FIIs": 30.0, "Hedge / Macro": 10.0, "Renda Fixa": 45.0}, "horizonte": "M\u00e9dio (5 anos)", "perfil": "Conservador", "vigencia": "01/12/2026"}, "M\u00e9dio (5 anos)||Moderado": {"ativos": [{"ativo": "Ativo Exclusivo #1", "categoria": "\u00cdndices", "classe": "ETF / Global", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}, {"ativo": "Ativo Exclusivo #2", "categoria": "A\u00e7\u00f5es", "classe": "A\u00e7\u00f5es", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}, {"ativo": "Ativo Exclusivo #3", "categoria": "Fundos", "classe": "FIIs", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}, {"ativo": "Ativo Exclusivo #4", "categoria": "Cripto", "classe": "Cripto", "peso_pct": null, "tese": "Ticker, peso exato e tese quantitativa liberados no Plano Anual / Vital\u00edcio.", "vigencia": "01/12/2026"}], "classes": {"A\u00e7\u00f5es": 30.0, "Cripto": 15.0, "ETF / Global": 30.0, "FIIs": 25.0}, "horizonte": "M\u00e9dio (5 anos)", "perfil": "Moderado", "vigencia": "01/12/2026"}};
+  let activeHorizon = "M\u00e9dio (5 anos)";
+  let activeProfile = "Moderado";
+  let projectionYears = activeHorizon.startsWith("Curto") ? 2 : (activeHorizon.startsWith("Longo") ? 10 : 5);
+
+  const CDI_ANNUAL = 0.1125;
+  const CLASS_COLORS = {
+    "Renda Fixa": "#3b82f6",
+    "FIIs": "#10b981",
+    "Ações": "#34d399",
+    "ETF / Global": "#8b5cf6",
+    "Cripto": "#f59e0b",
+    "Hedge / Macro": "#ec4899",
+    "Fundos": "#06b6d4"
+  };
+
+  const QUANT_META = {
+    "Curto (2 anos)||Conservador": { ret: 12.4, vol: 3.8, sharpe: 0.85, dd: -2.8, reb: "Trimestral", yrs: 2 },
+    "Curto (2 anos)||Moderado":    { ret: 14.6, vol: 8.9, sharpe: 0.72, dd: -8.5, reb: "Trimestral", yrs: 2 },
+    "Curto (2 anos)||Agressivo":   { ret: 18.8, vol: 17.4, sharpe: 0.68, dd: -18.0, reb: "Mensal", yrs: 2 },
+    "Médio (5 anos)||Conservador": { ret: 13.1, vol: 5.2, sharpe: 0.82, dd: -4.9, reb: "Semestral", yrs: 5 },
+    "Médio (5 anos)||Moderado":    { ret: 16.2, vol: 11.4, sharpe: 0.78, dd: -12.4, reb: "Trimestral", yrs: 5 },
+    "Médio (5 anos)||Agressivo":   { ret: 21.4, vol: 21.2, sharpe: 0.75, dd: -24.5, reb: "Trimestral", yrs: 5 },
+    "Longo (10+ anos)||Conservador": { ret: 13.8, vol: 6.8, sharpe: 0.84, dd: -7.5, reb: "Semestral", yrs: 10 },
+    "Longo (10+ anos)||Moderado":    { ret: 17.5, vol: 13.1, sharpe: 0.82, dd: -15.8, reb: "Semestral", yrs: 10 },
+    "Longo (10+ anos)||Agressivo":   { ret: 23.8, vol: 24.5, sharpe: 0.79, dd: -29.0, reb: "Trimestral", yrs: 10 }
+  };
+
+  const fmtBRL = (val, compact = false) => {
+    const n = Number(val) || 0;
+    if (compact) {
+      if (n >= 1e6) return "R$ " + (n / 1e6).toFixed(2).replace(".", ",") + "M";
+      if (n >= 1e3) return "R$ " + (n / 1e3).toFixed(1).replace(".", ",") + "k";
+    }
+    return n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  };
+  const fmtNum = (val, dec = 1) => (Number(val) || 0).toFixed(dec).replace(".", ",");
+  const escHtml = (s) => String(s || "").replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[ch]));
+
+  const capInput = document.getElementById("capitalInicialInput");
+  const aporteInput = document.getElementById("aporteMensalInput");
+
+  function getCapital() { return Math.max(0, parseFloat(capInput.value) || 0); }
+  function getAporte() { return Math.max(0, parseFloat(aporteInput.value) || 0); }
+
+  function simulateSeries(capital, monthly, annualRate, years) {
+    const months = years * 12;
+    const r = Math.pow(1 + annualRate, 1 / 12) - 1;
+    const cdiR = Math.pow(1 + CDI_ANNUAL, 1 / 12) - 1;
+    let port = capital;
+    let cdi = capital;
+    let invested = capital;
+    const pts = [{ m: 0, port, cdi, invested }];
+    for (let m = 1; m <= months; m++) {
+      port = port * (1 + r) + monthly;
+      cdi = cdi * (1 + cdiR) + monthly;
+      invested += monthly;
+      if (m % Math.max(1, Math.floor(months / 24)) === 0 || m === months) {
+        pts.push({ m, port, cdi, invested });
+      }
+    }
+    return pts;
+  }
+
+  function finalWealth(capital, monthly, annualRate, years) {
+    const months = years * 12;
+    const r = Math.pow(1 + annualRate, 1 / 12) - 1;
+    let val = capital;
+    for (let m = 1; m <= months; m++) val = val * (1 + r) + monthly;
+    return val;
+  }
+
+  function renderWealthChart(meta, capital, monthly) {
+    const svg = document.getElementById("wealthSvg");
+    const tooltip = document.getElementById("wealthTooltip");
+    const series = simulateSeries(capital, monthly, meta.ret / 100, projectionYears);
+    const W = 640, H = 230, padL = 62, padR = 16, padT = 16, padB = 28;
+    const plotW = W - padL - padR;
+    const plotH = H - padT - padB;
+
+    const maxVal = Math.max(...series.map(p => Math.max(p.port, p.cdi, p.invested)), 100);
+    const minVal = Math.min(...series.map(p => p.invested)) * 0.92;
+    const span = Math.max(maxVal - minVal, 1);
+
+    const toX = (m) => padL + (m / (projectionYears * 12)) * plotW;
+    const toY = (v) => padT + plotH - ((v - minVal) / span) * plotH;
+
+    let gridHtml = "";
+    for (let i = 0; i <= 4; i++) {
+      const val = minVal + (span * i) / 4;
+      const y = toY(val);
+      gridHtml += `<line x1="${padL}" y1="${y.toFixed(1)}" x2="${W - padR}" y2="${y.toFixed(1)}" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3,3" />`;
+      gridHtml += `<text x="${padL - 8}" y="${(y + 3).toFixed(1)}" text-anchor="end" fill="#7c8aa0" font-size="10" font-family="JetBrains Mono, monospace">${fmtBRL(val, true)}</text>`;
+    }
+
+    const stepsX = projectionYears <= 2 ? 4 : 5;
+    for (let i = 0; i <= stepsX; i++) {
+      const yr = (projectionYears * i) / stepsX;
+      const x = toX(yr * 12);
+      gridHtml += `<text x="${x.toFixed(1)}" y="${H - 8}" text-anchor="middle" fill="#7c8aa0" font-size="10" font-family="JetBrains Mono, monospace">${yr === 0 ? "Hoje" : "Ano " + fmtNum(yr, projectionYears === 2 && yr % 1 !== 0 ? 1 : 0)}</text>`;
+    }
+
+    const pathFor = (key) => series.map((p, idx) => `${idx === 0 ? "M" : "L"}${toX(p.m).toFixed(1)},${toY(p[key]).toFixed(1)}`).join(" ");
+    const portPath = pathFor("port");
+    const cdiPath = pathFor("cdi");
+    const invPath = pathFor("invested");
+    const areaPath = `${portPath} L${toX(series[series.length - 1].m).toFixed(1)},${padT + plotH} L${toX(0).toFixed(1)},${padT + plotH} Z`;
+
+    const lastPt = series[series.length - 1];
+    svg.innerHTML = `
+      <defs>
+        <linearGradient id="wealthAreaGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="rgba(16,185,129,0.28)" />
+          <stop offset="100%" stop-color="rgba(16,185,129,0.01)" />
+        </linearGradient>
+      </defs>
+      ${gridHtml}
+      <path d="${areaPath}" fill="url(#wealthAreaGrad)" />
+      <path d="${invPath}" fill="none" stroke="#64748b" stroke-width="1.5" stroke-dasharray="3,4" />
+      <path d="${cdiPath}" fill="none" stroke="#60a5fa" stroke-width="2" stroke-dasharray="6,4" />
+      <path d="${portPath}" fill="none" stroke="#10b981" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+      <line id="hoverRule" x1="0" y1="${padT}" x2="0" y2="${padT + plotH}" stroke="rgba(255,255,255,0.22)" stroke-width="1" style="display:none;" />
+      <circle id="hoverDotPort" cx="${toX(lastPt.m)}" cy="${toY(lastPt.port)}" r="4.5" fill="#34d399" stroke="#04070c" stroke-width="2" />
+    `;
+
+    svg.onmousemove = (e) => {
+      const rect = svg.getBoundingClientRect();
+      const relX = ((e.clientX - rect.left) / rect.width) * W;
+      const clampedM = Math.max(0, Math.min(projectionYears * 12, ((relX - padL) / plotW) * (projectionYears * 12)));
+      let nearest = series[0];
+      let minDist = Infinity;
+      for (const p of series) {
+        const d = Math.abs(p.m - clampedM);
+        if (d < minDist) { minDist = d; nearest = p; }
+      }
+      const rule = document.getElementById("hoverRule");
+      const dot = document.getElementById("hoverDotPort");
+      const cx = toX(nearest.m);
+      if (rule) { rule.setAttribute("x1", cx); rule.setAttribute("x2", cx); rule.style.display = "block"; }
+      if (dot) { dot.setAttribute("cx", cx); dot.setAttribute("cy", toY(nearest.port)); }
+      const alpha = nearest.port - nearest.cdi;
+      const yrLbl = (nearest.m / 12).toFixed(1).replace(".", ",");
+      tooltip.innerHTML = `
+        <div style="color:#94a3b8; margin-bottom:2px;">Mês ${nearest.m} (${yrLbl} anos)</div>
+        <div>Carteira: <strong class="text-green">${fmtBRL(nearest.port)}</strong></div>
+        <div>CDI (11,25%): <strong class="text-blue">${fmtBRL(nearest.cdi)}</strong></div>
+        <div>Aportado: <span style="color:#cbd5e1;">${fmtBRL(nearest.invested)}</span></div>
+        <div style="border-top:1px solid rgba(255,255,255,0.1); margin-top:3px; padding-top:3px;">
+          Alpha vs CDI: <strong class="${alpha >= 0 ? 'text-green' : 'text-red'}">${alpha >= 0 ? '+' : ''}${fmtBRL(alpha)}</strong>
+        </div>
+      `;
+      tooltip.classList.add("visible");
+    };
+    svg.onmouseleave = () => {
+      tooltip.classList.remove("visible");
+      const rule = document.getElementById("hoverRule");
+      if (rule) rule.style.display = "none";
+    };
+  }
+
+  function renderDonut(portfolio, capital) {
+    const svg = document.getElementById("donutSvg");
+    const stacked = document.getElementById("stackedBar");
+    const legend = document.getElementById("classLegend");
+    const entries = Object.entries(portfolio.classes || {}).sort((a, b) => b[1] - a[1]);
+    const totalW = entries.reduce((acc, [, w]) => acc + w, 0) || 100;
+
+    const R = 68, CX = 90, CY = 90, C = 2 * Math.PI * R;
+    let offset = 0;
+    let circles = "";
+    let stackedHtml = "";
+    let legendHtml = "";
+
+    entries.forEach(([cls, w]) => {
+      const pct = (w / totalW) * 100;
+      const dash = (pct / 100) * C;
+      const color = CLASS_COLORS[cls] || "#34d399";
+      circles += `<circle class="donut-seg" data-cls="${cls}" cx="${CX}" cy="${CY}" r="${R}" fill="transparent" stroke="${color}" stroke-width="20" stroke-dasharray="${dash.toFixed(2)} ${(C - dash).toFixed(2)}" stroke-dashoffset="${(-offset).toFixed(2)}" style="transition:stroke-width 0.18s ease;" />`;
+      offset += dash;
+
+      stackedHtml += `<div class="stacked-seg" style="width:${pct.toFixed(1)}%; background:${color};" title="${cls}: ${fmtNum(pct, 0)}%"></div>`;
+      const brlVal = capital * (pct / 100);
+      legendHtml += `
+        <div class="class-row" data-cls="${cls}">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="class-dot" style="background:${color};"></span>
+            <span style="font-weight:600;">${cls}</span>
+          </div>
+          <div class="mono tabular" style="text-align:right;">
+            <strong>${fmtNum(pct, 0)}%</strong>
+            <span style="color:var(--muted); font-size:0.75rem; margin-left:6px;">${fmtBRL(brlVal)}</span>
+          </div>
+        </div>
+      `;
+    });
+
+    svg.innerHTML = `<circle cx="${CX}" cy="${CY}" r="${R}" fill="transparent" stroke="rgba(255,255,255,0.06)" stroke-width="20" />` + circles;
+    stacked.innerHTML = stackedHtml;
+    legend.innerHTML = legendHtml;
+
+    document.getElementById("donutCenterPct").textContent = `${Math.round(totalW)}%`;
+    document.getElementById("donutCenterCap").textContent = fmtBRL(capital, true);
+    document.getElementById("assetCountBadge").textContent = `${portfolio.ativos.length} ativos`;
+
+    legend.querySelectorAll(".class-row").forEach(row => {
+      row.addEventListener("mouseenter", () => {
+        const seg = svg.querySelector(`.donut-seg[data-cls="${row.dataset.cls}"]`);
+        if (seg) seg.setAttribute("stroke-width", "25");
+      });
+      row.addEventListener("mouseleave", () => {
+        const seg = svg.querySelector(`.donut-seg[data-cls="${row.dataset.cls}"]`);
+        if (seg) seg.setAttribute("stroke-width", "20");
+      });
+    });
+  }
+
+  function renderAllocationTable(portfolio, capital, monthly) {
+    const tbody = document.getElementById("allocationTbody");
+    const ativos = portfolio.ativos || [];
+    if (!ativos.length) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--muted);">Nenhum ativo cadastrado nesta carteira.</td></tr>`;
+      return;
+    }
+
+    let totalWeight = 0;
+    tbody.innerHTML = ativos.map(a => {
+      const color = CLASS_COLORS[a.classe] || "#10b981";
+      if (HAS_ACCESS && a.peso_pct !== null) {
+        totalWeight += a.peso_pct;
+        const initAmt = capital * (a.peso_pct / 100);
+        const monthAmt = monthly * (a.peso_pct / 100);
+        return `
+          <tr>
+            <td>
+              <strong class="mono">${escHtml(a.ativo)}</strong>
+              <div style="font-size:0.72rem; color:var(--muted);">${escHtml(a.categoria)}</div>
+            </td>
+            <td><span class="badge badge-cat" style="border-color:${color}55; color:${color};">${escHtml(a.classe)}</span></td>
+            <td>
+              <div class="weight-bar-wrap">
+                <strong class="mono tabular" style="min-width:38px;">${fmtNum(a.peso_pct, 0)}%</strong>
+                <div class="weight-bar-track"><div class="weight-bar-fill" style="width:${Math.min(100, a.peso_pct)}%; background:${color};"></div></div>
+              </div>
+            </td>
+            <td class="mono tabular text-green"><strong>${fmtBRL(initAmt)}</strong></td>
+            <td class="mono tabular">${fmtBRL(monthAmt)}</td>
+            <td style="white-space:normal; min-width:240px; color:var(--text-soft); font-size:0.82rem;">${escHtml(a.tese)}</td>
+          </tr>
+        `;
+      }
+      return `
+        <tr>
+          <td><strong class="mono" style="color:var(--amber);">🔒 ${escHtml(a.ativo)}</strong></td>
+          <td><span class="badge badge-cat" style="border-color:${color}55; color:${color};">${escHtml(a.classe)}</span></td>
+          <td class="mono text-muted">••% (Anual)</td>
+          <td class="mono text-muted">R$ •••••</td>
+          <td class="mono text-muted">R$ ••••</td>
+          <td style="white-space:normal; min-width:240px; color:var(--muted); font-size:0.82rem;">${escHtml(a.tese)}</td>
+        </tr>
+      `;
+    }).join("");
+
+    document.getElementById("weightSumBadge").textContent = HAS_ACCESS
+      ? `Peso Total: ${fmtNum(totalWeight, 0)}% • Distribuído: ${fmtBRL(capital)}`
+      : `Estrutura: ${ativos.length} ativos selecionados`;
+  }
+
+  function renderMatrix(capital, monthly) {
+    const tbody = document.getElementById("matrixTbody");
+    const horizons = ["Curto (2 anos)", "Médio (5 anos)", "Longo (10+ anos)"];
+    const profiles = ["Conservador", "Moderado", "Agressivo"];
+    const rows = [];
+    horizons.forEach(h => {
+      profiles.forEach(p => {
+        const key = `${h}||${p}`;
+        const m = QUANT_META[key];
+        const proj = finalWealth(capital, monthly, m.ret / 100, m.yrs);
+        const isCurrent = h === activeHorizon && p === activeProfile;
+        rows.push(`
+          <tr style="${isCurrent ? 'background:rgba(16,185,129,0.08);' : ''}">
+            <td><strong>${h}</strong></td>
+            <td><span class="badge ${p === 'Conservador' ? 'badge-open' : (p === 'Moderado' ? 'badge-vip' : 'badge-buy')}">${p.toUpperCase()}</span></td>
+            <td class="mono text-green"><strong>${fmtNum(m.ret, 1)}% a.a.</strong></td>
+            <td class="mono">${fmtNum(m.vol, 1)}%</td>
+            <td class="mono text-blue">${fmtNum(m.sharpe, 2)}</td>
+            <td class="mono text-red">${fmtNum(m.dd, 1)}%</td>
+            <td>${m.reb}</td>
+            <td class="mono text-green"><strong>${fmtBRL(proj)}</strong> <span style="font-size:0.72rem; color:var(--muted);">(${m.yrs}a)</span></td>
+            <td><button type="button" class="btn btn-xs btn-outline pick-matrix-btn" data-h="${h}" data-p="${p}">Abrir</button></td>
+          </tr>
+        `);
+      });
+    });
+    tbody.innerHTML = rows.join("");
+    tbody.querySelectorAll(".pick-matrix-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        activeHorizon = btn.dataset.h;
+        activeProfile = btn.dataset.p;
+        projectionYears = QUANT_META[`${activeHorizon}||${activeProfile}`].yrs;
+        setView("terminal");
+        updateAll();
+      });
+    });
+  }
+
+  function updateUrlState() {
+    if (!window.history || !window.history.replaceState) return;
+    const url = new URL(window.location.href);
+    url.searchParams.set("horizonte", activeHorizon);
+    url.searchParams.set("perfil", activeProfile);
+    window.history.replaceState({}, "", url.toString());
+  }
+
+  function updateAll() {
+    const key = `${activeHorizon}||${activeProfile}`;
+    const portfolio = PORTFOLIOS[key] || { horizonte: activeHorizon, perfil: activeProfile, vigencia: "01/12/2026", ativos: [], classes: {} };
+    const meta = QUANT_META[key] || { ret: 15.0, vol: 10.0, sharpe: 0.78, dd: -10.0, reb: "Trimestral", yrs: 5 };
+    const capital = getCapital();
+    const monthly = getAporte();
+
+    // Sync active buttons
+    document.querySelectorAll("#horizonSwitcher .seg-btn").forEach(b => b.classList.toggle("active", b.dataset.horizon === activeHorizon));
+    document.querySelectorAll("#profileSwitcher .seg-btn").forEach(b => b.classList.toggle("active", b.dataset.profile === activeProfile));
+    document.querySelectorAll("#projYearsSwitcher .seg-btn").forEach(b => b.classList.toggle("active", parseInt(b.dataset.proj, 10) === projectionYears));
+
+    // KPIs
+    const projFinal = finalWealth(capital, monthly, meta.ret / 100, projectionYears);
+    const cdiFinal = finalWealth(capital, monthly, CDI_ANNUAL, projectionYears);
+    const alpha = projFinal - cdiFinal;
+    const monthlyIncomeNow = (capital * (meta.ret / 100)) / 12;
+
+    document.getElementById("kpiYearsLabel").textContent = projectionYears;
+    document.getElementById("kpiProjectedVal").textContent = fmtBRL(projFinal);
+    document.getElementById("kpiAlphaVsCdi").textContent = `${alpha >= 0 ? '+' : ''}${fmtBRL(alpha)} vs CDI`;
+    document.getElementById("kpiExpectedReturn").textContent = `${fmtNum(meta.ret, 1)}% a.a.`;
+    document.getElementById("kpiMonthlyYield").textContent = `Renda est. inicial: ${fmtBRL(monthlyIncomeNow)}/mês`;
+    document.getElementById("kpiSharpe").textContent = fmtNum(meta.sharpe, 2);
+    document.getElementById("kpiVol").textContent = `${fmtNum(meta.vol, 1)}% vol`;
+    document.getElementById("kpiDrawdown").textContent = `Max DD est.: ${fmtNum(meta.dd, 1)}%`;
+    document.getElementById("kpiVigencia").textContent = portfolio.vigencia || "01/12/2026";
+    document.getElementById("kpiRebalance").textContent = `Rebalanceamento: ${meta.reb}`;
+
+    document.getElementById("chartHeading").textContent = `Projeção: ${activeHorizon} • ${activeProfile}`;
+    document.getElementById("tableHeading").textContent = `Alocação Exata em R$ — ${activeHorizon} • ${activeProfile}`;
+
+    [2, 5, 10].forEach(yrs => {
+      const val = finalWealth(capital, monthly, meta.ret / 100, yrs);
+      const totInv = capital + monthly * yrs * 12;
+      const gainPct = totInv > 0 ? ((val - totInv) / totInv) * 100 : 0;
+      document.getElementById(`miniVal${yrs}`).textContent = fmtBRL(val);
+      document.getElementById(`miniSub${yrs}`).textContent = `+${fmtNum(gainPct, 1)}% s/ aportado`;
+      document.getElementById(`miniBox${yrs}`).classList.toggle("active", yrs === projectionYears);
+    });
+
+    renderWealthChart(meta, capital, monthly);
+    renderDonut(portfolio, capital);
+    renderAllocationTable(portfolio, capital, monthly);
+    renderMatrix(capital, monthly);
+  }
+
+  function setView(mode) {
+    const isMatrix = mode === "matrix";
+    document.getElementById("terminalView").style.display = isMatrix ? "none" : "block";
+    document.getElementById("matrixView").style.display = isMatrix ? "block" : "none";
+    document.getElementById("viewTerminalBtn").classList.toggle("active", !isMatrix);
+    document.getElementById("viewMatrixBtn").classList.toggle("active", isMatrix);
+  }
+
+  document.getElementById("viewTerminalBtn").addEventListener("click", () => setView("terminal"));
+  document.getElementById("viewMatrixBtn").addEventListener("click", () => setView("matrix"));
+
+  document.querySelectorAll("#horizonSwitcher .seg-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      activeHorizon = btn.dataset.horizon;
+      projectionYears = QUANT_META[`${activeHorizon}||${activeProfile}`]?.yrs || 5;
+      updateUrlState();
+      updateAll();
+    });
+  });
+
+  document.querySelectorAll("#profileSwitcher .seg-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      activeProfile = btn.dataset.profile;
+      updateUrlState();
+      updateAll();
+    });
+  });
+
+  document.querySelectorAll("#projYearsSwitcher .seg-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      projectionYears = parseInt(btn.dataset.proj, 10) || 5;
+      updateAll();
+    });
+  });
+
+  capInput.addEventListener("input", updateAll);
+  aporteInput.addEventListener("input", updateAll);
+
+  document.querySelectorAll(".preset-chip[data-cap]").forEach(c => {
+    c.addEventListener("click", () => { capInput.value = c.dataset.cap; updateAll(); });
+  });
+  document.querySelectorAll(".preset-chip[data-aporte]").forEach(c => {
+    c.addEventListener("click", () => { aporteInput.value = c.dataset.aporte; updateAll(); });
+  });
+
+  const copyBtn = document.getElementById("copyAllocationBtn");
+  if (copyBtn) {
+    copyBtn.addEventListener("click", () => {
+      const key = `${activeHorizon}||${activeProfile}`;
+      const p = PORTFOLIOS[key];
+      if (!p) return;
+      const cap = getCapital(), mon = getAporte();
+      const lines = [
+        `HEURÍSTIKA — CARTEIRA ${activeHorizon.toUpperCase()} | PERFIL ${activeProfile.toUpperCase()}`,
+        `Vigência: ${p.vigencia || '01/12/2026'} | Capital: ${fmtBRL(cap)} | Aporte Mensal: ${fmtBRL(mon)}`,
+        "----------------------------------------",
+        ...p.ativos.map(a => `• ${a.ativo} (${a.classe}) — ${fmtNum(a.peso_pct, 0)}% | Inicial: ${fmtBRL(cap * a.peso_pct / 100)} | Mensal: ${fmtBRL(mon * a.peso_pct / 100)}`)
+      ];
+      window.hkCopyText(lines.join("\n"), "Ordem de alocação copiada!");
+    });
+  }
+
+  const csvBtn = document.getElementById("exportCsvBtn");
+  if (csvBtn) {
+    csvBtn.addEventListener("click", () => {
+      const key = `${activeHorizon}||${activeProfile}`;
+      const p = PORTFOLIOS[key];
+      if (!p) return;
+      const cap = getCapital(), mon = getAporte();
+      const header = "Ativo,Categoria,Classe,Peso_Pct,Aporte_Inicial_BRL,Aporte_Mensal_BRL,Tese\n";
+      const rows = p.ativos.map(a => [
+        `"${a.ativo}"`, `"${a.categoria}"`, `"${a.classe}"`, a.peso_pct,
+        (cap * a.peso_pct / 100).toFixed(2), (mon * a.peso_pct / 100).toFixed(2),
+        `"${(a.tese || '').replace(/"/g, '""')}"`
+      ].join(",")).join("\n");
+      const blob = new Blob(["\uFEFF" + header + rows], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `heuristika_${activeProfile.toLowerCase()}_${projectionYears}a.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      window.hkToast("Arquivo CSV exportado!", "success");
+    });
+  }
+
+  // Modal Pix Plano Anual
+  const annualModal = document.getElementById("annualPixModal");
+  if (annualModal) {
+    ["openAnnualPixTop", "openAnnualPixBanner", "openAnnualPixTable"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener("click", () => annualModal.classList.add("open"));
+    });
+    document.getElementById("closeAnnualPix").addEventListener("click", () => annualModal.classList.remove("open"));
+    annualModal.addEventListener("click", (e) => { if (e.target === annualModal) annualModal.classList.remove("open"); });
+    document.getElementById("copyAnnualPixBtn").addEventListener("click", () => {
+      const key = (document.getElementById("annualPixKey").textContent || "").trim();
+      window.hkCopyText(key, "Chave Pix copiada!");
+    });
+  }
+
+  // Formador de Carteira Passo a Passo (1 fase por vez)
+  const pbIntro = document.getElementById("pbIntroView");
+  const pbWiz = document.getElementById("pbWizardView");
+  const pbRes = document.getElementById("pbResultView");
+  const pbStepLbl = document.getElementById("pbStepLabel");
+  const pbFill = document.getElementById("pbProgressFill");
+  const pbAnswers = { horizon: "Médio (5 anos)", dd: 1, exp: 1 };
+
+  function showPbStep(stepNum) {
+    document.querySelectorAll(".pb-step").forEach(el => {
+      el.style.display = (parseInt(el.dataset.step, 10) === stepNum) ? "block" : "none";
+    });
+    if (pbStepLbl) pbStepLbl.textContent = `Passo ${stepNum} de 3`;
+    if (pbFill) pbFill.style.width = `${Math.round((stepNum / 3) * 100)}%`;
+  }
+
+  document.getElementById("pbStartBtn")?.addEventListener("click", () => {
+    if (pbIntro) pbIntro.style.display = "none";
+    if (pbRes) pbRes.style.display = "none";
+    if (pbWiz) pbWiz.style.display = "block";
+    showPbStep(1);
+  });
+
+  document.getElementById("pbCancelBtn")?.addEventListener("click", () => {
+    if (pbWiz) pbWiz.style.display = "none";
+    if (pbIntro) pbIntro.style.display = "flex";
+  });
+
+  document.getElementById("pbRestartBtn")?.addEventListener("click", () => {
+    if (pbRes) pbRes.style.display = "none";
+    if (pbWiz) pbWiz.style.display = "block";
+    showPbStep(1);
+  });
+
+  document.querySelectorAll(".pb-opt-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const step = parseInt(btn.dataset.step, 10);
+      if (step === 1) {
+        pbAnswers.horizon = btn.dataset.val;
+        showPbStep(2);
+      } else if (step === 2) {
+        pbAnswers.dd = parseInt(btn.dataset.val, 10) || 0;
+        showPbStep(3);
+      } else if (step === 3) {
+        pbAnswers.exp = parseInt(btn.dataset.val, 10) || 0;
+        const score = pbAnswers.dd + pbAnswers.exp;
+        let prof = "Moderado";
+        let motivo = "Equilíbrio entre proteção em Renda Fixa/IPCA+ e crescimento com Ações, FIIs e Global.";
+        if (score <= 1) {
+          prof = "Conservador";
+          motivo = "Foco em preservação de capital, alta liquidez e baixa volatilidade.";
+        } else if (score >= 3) {
+          prof = "Agressivo";
+          motivo = "Maior exposição a crescimento global, ações e ativos assimétricos para maximizar retorno composto.";
+        }
+        activeHorizon = pbAnswers.horizon;
+        activeProfile = prof;
+        projectionYears = QUANT_META[`${activeHorizon}||${activeProfile}`]?.yrs || 5;
+        updateUrlState();
+        updateAll();
+
+        if (pbWiz) pbWiz.style.display = "none";
+        if (pbRes) pbRes.style.display = "block";
+        const badge = document.getElementById("builderResultBadge");
+        if (badge) badge.textContent = `Carteira Ideal: ${activeHorizon} • ${activeProfile}`;
+        const exp = document.getElementById("builderExplanation");
+        if (exp) exp.innerHTML = `<strong>${escHtml(activeHorizon)} • ${escHtml(activeProfile)}:</strong> ${escHtml(motivo)}`;
+        if (window.hkToast) window.hkToast(`Carteira ${activeHorizon} • ${activeProfile} aplicada!`, "success");
+      }
+    });
+  });
+
+  const shareWaBtn = document.getElementById("sharePortfolioWaBtn");
+  if (shareWaBtn) {
+    shareWaBtn.addEventListener("click", () => {
+      const key = `${activeHorizon}||${activeProfile}`;
+      const p = PORTFOLIOS[key];
+      const cap = getCapital(), mon = getAporte();
+      const lines = [
+        `HEURÍSTIKA — CARTEIRA ${activeHorizon.toUpperCase()} | PERFIL ${activeProfile.toUpperCase()}`,
+        `Capital Inicial: ${fmtBRL(cap)} | Aporte Mensal: ${fmtBRL(mon)}`,
+        ...(p && p.ativos ? p.ativos.map(a => `• ${a.ativo} (${a.classe}): ${fmtNum(a.peso_pct, 0)}% (${fmtBRL(cap * a.peso_pct / 100)})`) : []),
+        `Simule em: ${window.location.href}`
+      ];
+      window.open("https://wa.me/?text=" + encodeURIComponent(lines.join("\n")), "_blank", "noopener");
+    });
+  }
+
+  updateAll();
+})();
+</script>
+
+<section class="container section-wrap" style="padding-top:0;">
+  <details style="margin-top:24px; border:1px solid var(--border); border-radius:12px; background:rgba(15,23,42,0.55); padding:12px 16px;">
+    <summary style="cursor:pointer; font-weight:700; font-size:0.9rem; color:var(--text-soft); display:flex; justify-content:space-between; align-items:center;">
+      <span>🔬 Modo Avançado: Laboratório de Estratégias &amp; Radar Global (para usuários experientes)</span>
+      <span class="badge badge-cat">Opcional</span>
+    </summary>
+  <!-- LABORATÓRIO DE ESTRATÉGIAS, RADAR GLOBAL & AGENTE (FASES 3 & 4) -->
+  <div id="strategyLabSection" class="term-panel" style="margin-top:28px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
+      <div>
+        <div class="term-kicker">LABORATÓRIO DE ESTRATÉGIAS &amp; RADAR GLOBAL (MODO ESTRITO • PAPER TRADING)</div>
+        <h2 style="margin:4px 0 0; font-size:1.3rem;">Gerente de Estratégias, Propostas &amp; Agente</h2>
+      </div>
+      <div class="seg-group" id="labTabs" role="tablist">
+        <button type="button" class="seg-btn active" data-labtab="strategies">Estratégias</button>
+        <button type="button" class="seg-btn" data-labtab="radar">Radar Global</button>
+        <button type="button" class="seg-btn" data-labtab="proposals">Propostas &amp; Log</button>
+        <button type="button" class="seg-btn" data-labtab="agent">Agente &amp; Relatórios</button>
+      </div>
+    </div>
+
+    <div id="labDisclaimers" class="paywall-bar-pro" style="margin-bottom:16px; font-size:0.82rem;">
+      <div>
+        <strong>Avisos Obrigatórios:</strong> Laboratório educativo de carteiras simuladas (sem ordens reais e sem recomendação personalizada). Impostos (IR, dividendos, IOF, come-cotas) não modelados; universo atual escolhido hoje (sujeito a viés de sobrevivência e de seleção). Em <code>trend_following_turtles</code> e <code>radar_top_n</code>, criptoativos (BTC/ETH) concentram parte relevante do retorno histórico. Score do Radar Global é heurístico, sem poder preditivo comprovado.
+        <span id="labStaleBadge" class="badge badge-warn" style="display:none; margin-left:8px;">Snapshot desatualizado</span>
+        <span id="labDataBaseBadge" class="badge badge-cat" style="margin-left:8px;">Data-base CVM: carregando...</span>
+      </div>
+    </div>
+
+    <div id="labLoadingState" class="mono" style="padding:18px; color:var(--text-soft);">Carregando estratégias, curvas base 100 e Radar Global...</div>
+    <div id="labErrorState" class="badge badge-warn" style="display:none; padding:12px; margin-bottom:12px;"></div>
+
+    <!-- Tab 1: Estratégias & Comparador -->
+    <div id="labTabStrategies" class="lab-tab-pane">
+      <div id="labStrategyCards" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:14px; margin-bottom:18px;"></div>
+      <h3 style="margin:12px 0 8px; font-size:1rem;">Comparador de Estratégias Ativas</h3>
+      <div style="overflow-x:auto;">
+        <table class="table-pro" id="labCompareTable">
+          <thead><tr><th>Estratégia</th><th>Status</th><th>Janela</th><th>Retorno</th><th>Volatilidade</th><th>Max DD</th><th>Sharpe vs CDI</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tab 2: Radar Global -->
+    <div id="labTabRadar" class="lab-tab-pane" style="display:none;">
+      <div id="labRegimeBox" style="margin-bottom:14px; padding:12px; border:1px solid var(--border); border-radius:10px;"></div>
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:10px;">
+        <input type="text" id="radarFilterInput" placeholder="Filtrar ativo/classe (ex: EUA, Ouro, IVV)..." style="padding:7px 10px; border-radius:8px; border:1px solid var(--border); background:var(--panel-2); color:var(--text);" />
+        <span class="mono" style="font-size:0.78rem; color:var(--text-soft);" id="radarCorrSummary"></span>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="table-pro" id="radarRankingTable">
+          <thead><tr><th>Ativo</th><th>Classe</th><th>Score Heurístico</th><th>A FAVOR / CONTRA</th><th>Ação</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tab 3: Propostas & Audit Log -->
+    <div id="labTabProposals" class="lab-tab-pane" style="display:none;">
+      <h3 style="margin:0 0 8px; font-size:1rem;">Fila de Propostas (Aprovação exclusiva de Admin)</h3>
+      <div id="labProposalsList" style="margin-bottom:16px;"></div>
+      <h3 style="margin:0 0 8px; font-size:1rem;">Audit Log Imutável</h3>
+      <div id="labAuditLogList" class="mono" style="font-size:0.78rem; max-height:240px; overflow-y:auto;"></div>
+    </div>
+
+    <!-- Tab 4: Chat com Agente & Relatórios -->
+    <div id="labTabAgent" class="lab-tab-pane" style="display:none;">
+      <div style="display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap;">
+        <input type="text" id="agentChatInput" placeholder="Pergunte sobre regime, radar, comparação ou estratégia (modo determinístico)..." style="flex:1; min-width:240px; padding:9px 12px; border-radius:8px; border:1px solid var(--border); background:var(--panel-2); color:var(--text);" />
+        <button type="button" id="agentSendBtn" class="btn btn-sm btn-electric">Enviar ao Agente</button>
+        <button type="button" id="agentWeeklyBtn" class="btn btn-sm btn-outline">Relatório Semanal</button>
+        <button type="button" id="agentMonthlyBtn" class="btn btn-sm btn-outline">Relatório Mensal</button>
+      </div>
+      <div id="agentReplyBox" class="mono" style="padding:12px; border:1px solid var(--border); border-radius:10px; white-space:pre-wrap; font-size:0.82rem; min-height:60px;">Pronto para consultas determinísticas (custo zero).</div>
+    </div>
+  </div>
+  </details>
+</section>
+
+<script>
+// Script independente do Laboratório de Estratégias (/api/strategies/*)
+(function() {
+  const labSec = document.getElementById("strategyLabSection");
+  if (!labSec) return;
+  const IS_STATIC = true;
+  const tabBtns = document.querySelectorAll("#labTabs .seg-btn");
+  const panes = {
+    strategies: document.getElementById("labTabStrategies"),
+    radar: document.getElementById("labTabRadar"),
+    proposals: document.getElementById("labTabProposals"),
+    agent: document.getElementById("labTabAgent"),
+  };
+  tabBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      tabBtns.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const target = btn.getAttribute("data-labtab");
+      Object.entries(panes).forEach(([k, el]) => { if (el) el.style.display = (k === target) ? "block" : "none"; });
+    });
+  });
+
+  if (IS_STATIC) {
+    document.getElementById("labLoadingState").textContent = "Bundle estático GitHub Pages: chat e aprovações Admin desabilitados (somente relatórios pré-gerados).";
+    const agentTab = document.querySelector('[data-labtab="agent"]');
+    if (agentTab) agentTab.style.display = "none";
+    return;
+  }
+
+  let overviewData = null;
+  function renderOverview(d) {
+    overviewData = d;
+    document.getElementById("labLoadingState").style.display = "none";
+    const fm = d.fundamentals_meta || {};
+    document.getElementById("labDataBaseBadge").textContent = `Base snapshot: ${fm.reference_date || 'indisponível'} (${fm.universe_count || 0} ativos)`;
+    if (fm.is_stale) document.getElementById("labStaleBadge").style.display = "inline-block";
+
+    // Cards e Comparador
+    const cardsEl = document.getElementById("labStrategyCards");
+    const compBody = document.querySelector("#labCompareTable tbody");
+    cardsEl.innerHTML = "";
+    compBody.innerHTML = "";
+    (d.strategies || []).forEach(item => {
+      const m = item.meta || {}, run = item.run || {}, bt = run.backtest || {}, met = bt.metrics || {};
+      const statusBadge = m.enabled ? (bt.available ? "Ativa • Backtest t+1" : "Ativa • Prospectiva") : "Fase 2 (Preparada)";
+      const weights = (run.target_weights || []).slice(0, 5).map(w => `${w.symbol} (${w.target_weight_pct}%)`).join(", ") || "indisponível";
+      const card = document.createElement("div");
+      card.style.cssText = "border:1px solid var(--border); border-radius:10px; padding:12px; background:var(--panel-2);";
+      card.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:6px;">
+          <strong>${m.nome || m.id}</strong>
+          <span class="badge badge-cat">${statusBadge}</span>
+        </div>
+        <div style="font-size:0.8rem; color:var(--text-soft); margin-bottom:6px;">${m.principal_risco || ''}</div>
+        <div class="mono" style="font-size:0.76rem; margin-bottom:8px;">Alocação: ${weights}</div>
+        ${m.enabled ? `<button type="button" class="btn btn-sm btn-outline prop-btn" data-sid="${m.id}">Propor Rebalanceamento</button>` : ""}
+      `;
+      cardsEl.appendChild(card);
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td><code>${m.id}</code></td><td>${statusBadge}</td><td>${bt.start_date ? bt.start_date + '..' + bt.end_date : 'point-in-time'}</td><td>${met.total_return_pct ?? '—'}%</td><td>${met.volatility_ann_pct ?? '—'}%</td><td>${met.max_drawdown_pct ?? '—'}%</td><td>${met.sharpe_vs_cdi ?? '—'}</td>`;
+      compBody.appendChild(tr);
+    });
+
+    cardsEl.querySelectorAll(".prop-btn").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const sid = btn.getAttribute("data-sid");
+        await fetch("/api/strategies/propose", { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({strategy_id: sid}) });
+        loadOverview();
+      });
+    });
+
+    // Radar Global
+    const rad = d.radar || {}, reg = rad.regime || {};
+    const sigHtml = (reg.signals || []).map(s => `<span class="badge badge-cat" style="margin-right:6px;">${s.name}: ${s.value} (${s.signal})</span>`).join("");
+    document.getElementById("labRegimeBox").innerHTML = `<strong>Regime: ${reg.regime || 'indisponível'}</strong> (${reg.availability_label || '0 de 4 sinais'})<div style="margin-top:6px;">${sigHtml}</div>`;
+    const corr = rad.correlation_matrix || {};
+    const pairs = corr.high_correlation_pairs || [];
+    document.getElementById("radarCorrSummary").textContent = `Correlação (${rad.correlation_window_days || 126}d): ${pairs.length} par(es) >= 0.75`;
+    renderRadarRows("");
+
+    // Propostas e Log
+    const pEl = document.getElementById("labProposalsList");
+    const props = d.proposals || [];
+    if (!props.length) {
+      pEl.innerHTML = `<div class="mono" style="color:var(--text-soft);">Nenhuma proposta registrada.</div>`;
+    } else {
+      pEl.innerHTML = props.map(p => `
+        <div style="border:1px solid var(--border); border-radius:8px; padding:8px 10px; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+          <span class="mono" style="font-size:0.78rem;">#${p.id} <strong>${p.strategy_id}</strong> • ${p.status} • ${p.created_at}</span>
+          ${d.is_admin && p.status === 'PENDENTE' ? `<span><button type="button" class="btn btn-sm btn-primary dec-btn" data-id="${p.id}" data-dec="APROVADA">Aprovar</button> <button type="button" class="btn btn-sm btn-outline dec-btn" data-id="${p.id}" data-dec="REJEITADA">Rejeitar</button></span>` : ''}
+        </div>
+      `).join("");
+      pEl.querySelectorAll(".dec-btn").forEach(b => {
+        b.addEventListener("click", async () => {
+          await fetch(`/api/admin/strategies/proposals/${b.getAttribute("data-id")}/decide`, { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({decision: b.getAttribute("data-dec")}) });
+          loadOverview();
+        });
+      });
+    }
+    const logEl = document.getElementById("labAuditLogList");
+    logEl.innerHTML = (d.audit_log || []).map(l => `<div>[${l.created_at}] <strong>${l.strategy_id}</strong> (${l.actor}): ${l.decision}</div>`).join("") || "Sem registros.";
+  }
+
+  function renderRadarRows(filter) {
+    const tbody = document.querySelector("#radarRankingTable tbody");
+    if (!overviewData) return;
+    const f = (filter || "").toLowerCase();
+    const cands = ((overviewData.radar || {}).candidates || []).filter(c => !f || `${c.symbol} ${c.name} ${c.asset_class}`.toLowerCase().includes(f));
+    if (!cands.length) {
+      tbody.innerHTML = `<tr><td colspan="5" class="mono">Nenhum candidato encontrado.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = cands.slice(0, 12).map(c => `
+      <tr>
+        <td><strong>${c.symbol}</strong><br><small>${c.label || 'CANDIDATO A ESTUDO'}</small></td>
+        <td>${c.asset_class || ''}</td>
+        <td class="mono">${c.score ?? '—'}</td>
+        <td style="font-size:0.76rem;"><strong>+</strong> ${(c.a_favor||[])[0] || ''}<br><strong>-</strong> ${(c.contra||[])[0] || ''}</td>
+        <td><button type="button" class="btn btn-sm btn-outline prop-cand-btn" data-sym="${c.symbol}">Propor posição simulada</button></td>
+      </tr>
+    `).join("");
+    tbody.querySelectorAll(".prop-cand-btn").forEach(b => {
+      b.addEventListener("click", async () => {
+        await fetch("/api/strategies/propose", { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({strategy_id: "radar_top_n", symbol: b.getAttribute("data-sym")}) });
+        loadOverview();
+      });
+    });
+  }
+
+  const rFilter = document.getElementById("radarFilterInput");
+  if (rFilter) rFilter.addEventListener("input", e => renderRadarRows(e.target.value));
+
+  async function loadOverview() {
+    try {
+      const r = await fetch("/api/strategies/overview");
+      const d = await r.json();
+      if (!d.ok) throw new Error(d.error || "Falha ao carregar");
+      renderOverview(d);
+    } catch (err) {
+      document.getElementById("labLoadingState").style.display = "none";
+      const errEl = document.getElementById("labErrorState");
+      errEl.style.display = "block";
+      errEl.textContent = "Erro ao carregar Laboratório: " + err.message;
+    }
+  }
+
+  async function sendAgent(msg) {
+    const box = document.getElementById("agentReplyBox");
+    box.textContent = "Consultando agente determinístico...";
+    const r = await fetch("/api/strategies/agent/chat", { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({message: msg}) });
+    const d = await r.json();
+    box.textContent = d.reply || d.error || "Sem resposta.";
+  }
+  document.getElementById("agentSendBtn")?.addEventListener("click", () => sendAgent(document.getElementById("agentChatInput").value));
+  document.getElementById("agentWeeklyBtn")?.addEventListener("click", () => sendAgent("gerar relatório semanal"));
+  document.getElementById("agentMonthlyBtn")?.addEventListener("click", () => sendAgent("gerar relatório mensal"));
+
+  loadOverview();
+})();
+</script>
+
+  </main>
+
+  <footer class="site-footer no-print">
+    <div class="container footer-inner" style="flex-wrap:wrap; gap:12px;">
+      <span>Heurístika • Heurística Financeira &amp; Auditoria Quantitativa</span>
+      <div style="display:flex; gap:14px; align-items:center; font-size:0.78rem;">
+        <a href="../admin/" style="color:var(--muted);">Painel Admin</a>
+        <a href="#pt" data-static-lang="pt" style="color:var(--muted);">PT</a>
+        <a href="#en" data-static-lang="en" style="color:var(--muted);">EN</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.hkToast = function(message, type = "success") {
+      const container = document.getElementById("hkToastContainer");
+      if (!container) return;
+      const el = document.createElement("div");
+      el.className = `hk-toast hk-toast-${type}`;
+      el.innerHTML = `<span class="hk-toast-dot"></span><span></span>`;
+      el.querySelector("span:last-child").textContent = message;
+      container.appendChild(el);
+      requestAnimationFrame(() => el.classList.add("show"));
+      setTimeout(() => {
+        el.classList.remove("show");
+        setTimeout(() => el.remove(), 240);
+      }, 2800);
+    };
+
+    window.hkCopyText = async function(text, okMsg = "Copiado para a área de transferência!") {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          ta.style.position = "fixed";
+          ta.style.opacity = "0";
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand("copy");
+          ta.remove();
+        }
+        window.hkToast(okMsg, "success");
+        return true;
+      } catch (e) {
+        window.hkToast("Não foi possível copiar automaticamente.", "warning");
+        return false;
+      }
+    };
+
+    document.addEventListener("click", (e) => {
+      const waBtn = e.target.closest(".hk-share-wa");
+      if (waBtn) {
+        const txt = waBtn.getAttribute("data-share") || "";
+        window.open("https://wa.me/?text=" + encodeURIComponent(txt), "_blank", "noopener");
+        return;
+      }
+      const tgBtn = e.target.closest(".hk-share-tg");
+      if (tgBtn) {
+        const txt = tgBtn.getAttribute("data-share") || "";
+        window.open("https://t.me/share/url?url=" + encodeURIComponent(window.location.href) + "&text=" + encodeURIComponent(txt), "_blank", "noopener");
+      }
+    });
+
+    (function initSubtleCardGlow() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const spotlight = document.getElementById("cursorSpotlight");
+      window.addEventListener("mousemove", (e) => {
+        const mx = e.clientX;
+        const my = e.clientY;
+        if (spotlight) {
+          spotlight.style.setProperty("--mx", mx + "px");
+          spotlight.style.setProperty("--my", my + "px");
+        }
+        const card = e.target.closest(".source-card, .signal-card, .plan-card, .inst-card, .terminal-window, .term-panel");
+        if (card) {
+          const rect = card.getBoundingClientRect();
+          card.style.setProperty("--cx", (mx - rect.left) + "px");
+          card.style.setProperty("--cy", (my - rect.top) + "px");
+        }
+      }, { passive: true });
+    })();
+  </script>
+
+<script id="hkStaticPagesRuntime">
+(function() {
+  window.HK_STATIC_PAGES = true;
+  const PREFIX = "..";
+  const PAGE_KIND = "carteiras_demo";
+  const VIP_KEY = "hk_static_vip_v1";
+  const ADMIN_KEY = "hk_static_admin_v1";
+  const STUDENT_KEY = "hk_static_student_v1";
+  const CERTS_KEY = "hk_static_certs_v1";
+  const QUESTIONS = [];
+
+  function getVipSession() {
+    try { return JSON.parse(localStorage.getItem(VIP_KEY) || "null"); }
+    catch (e) { return null; }
+  }
+
+  // Sincroniza botões de topo (Entrar vs Terminal VIP / Sair) e logout VIP
+  const vipSess = getVipSession();
+  document.querySelectorAll('[data-static-vip-logout="1"], a[href$="/logout"]').forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      try { localStorage.removeItem(VIP_KEY); } catch (err) {}
+      window.location.href = PREFIX + "/index.html";
+    });
+  });
+
+  if (vipSess) {
+    document.querySelectorAll('.nav-cta a[href$="/login/"]').forEach(a => {
+      a.textContent = "Terminal VIP";
+      a.setAttribute("href", PREFIX + "/vip/");
+      a.classList.remove("btn-outline");
+      a.classList.add("btn-electric");
+    });
+    if (PAGE_KIND === "home") {
+      document.querySelectorAll(".vip-lock-overlay").forEach(ov => {
+        const p = ov.querySelector("p");
+        if (p) p.textContent = "Seu acesso VIP está ativo! Abra o Terminal VIP para ver os parâmetros completos e o botão de compartilhar.";
+        const a = ov.querySelector("a.btn");
+        if (a) {
+          a.textContent = "Ver Sinal Liberado no Terminal VIP →";
+          a.setAttribute("href", PREFIX + "/vip/");
+        }
+      });
+      const heroCta = document.querySelector('.hero-buttons a[href="#planos"]');
+      if (heroCta) {
+        heroCta.textContent = "Abrir Terminal VIP (Sinais em Aberto) →";
+        heroCta.setAttribute("href", PREFIX + "/vip/");
+      }
+    }
+  }
+
+  // Se estiver na página demo de carteiras mas já logado como VIP/Anual, abre a versão desbloqueada
+  if (PAGE_KIND === "carteiras_demo" && vipSess) {
+    window.location.replace(PREFIX + "/carteiras/anual.html");
+    return;
+  }
+
+  // Página de Login VIP (/login/)
+  if (PAGE_KIND === "login") {
+    document.querySelectorAll('form[action$="/login"], form').forEach(form => {
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const input = form.querySelector('[name="identificador"]');
+        const raw = (input ? input.value : "").trim();
+        if (!raw || raw.length < 3) {
+          if (window.hkToast) window.hkToast("Informe seu e-mail ou código de acesso VIP.", "warning");
+          return;
+        }
+        const upper = raw.toUpperCase();
+        const validCodes = ["VIP-VITALICIO", "VITALICIO", "VIP-DEMO-2026", "ANUAL-2026", "ADMIN123", "VIP-2026", "HEURISTIKA-VIP", "LSSCHNEIDER24"];
+        const isEmail = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(raw);
+        if (!isEmail && !validCodes.includes(upper) && !upper.startsWith("VIP-")) {
+          if (window.hkToast) window.hkToast("Código inválido. Use seu código Vitalício (VIP-VITALICIO) ou e-mail cadastrado.", "warning");
+          return;
+        }
+        const subObj = {
+          nome: isEmail ? raw.split("@")[0] : "Acesso Master Vitalício",
+          contato: raw,
+          plano: "Vitalício",
+          codigo_acesso: isEmail ? "VIP-VITALICIO" : upper,
+        };
+        try { localStorage.setItem(VIP_KEY, JSON.stringify(subObj)); } catch (err) {}
+        const params = new URLSearchParams(window.location.search);
+        const next = params.get("next") || "";
+        if (next === "carteiras") {
+          window.location.href = PREFIX + "/carteiras/anual.html";
+        } else {
+          window.location.href = PREFIX + "/vip/";
+        }
+      });
+    });
+  }
+
+  // Página do Painel Admin (/admin/)
+  if (PAGE_KIND === "admin") {
+    const gate = document.getElementById("staticAdminGate");
+    const content = document.getElementById("staticAdminContent");
+    const form = document.getElementById("staticAdminLoginForm");
+    function checkAdminAuth() {
+      const ok = sessionStorage.getItem(ADMIN_KEY) === "1";
+      if (gate) gate.style.display = ok ? "none" : "block";
+      if (content) content.style.display = ok ? "block" : "none";
+    }
+    form?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const pwd = (document.getElementById("staticAdminPwd")?.value || "").trim();
+      if (pwd === "admin123") {
+        sessionStorage.setItem(ADMIN_KEY, "1");
+        checkAdminAuth();
+        if (window.hkToast) window.hkToast("Painel Administrativo desbloqueado!", "success");
+      } else {
+        if (window.hkToast) window.hkToast("Senha administrativa incorreta.", "warning");
+      }
+    });
+    document.querySelectorAll('form[action$="/admin/logout"]').forEach(f => {
+      f.addEventListener("submit", (e) => {
+        e.preventDefault();
+        sessionStorage.removeItem(ADMIN_KEY);
+        window.location.href = PREFIX + "/index.html";
+      });
+    });
+    checkAdminAuth();
+  }
+
+  // Filtro client-side de categorias na Vitrine e no Terminal VIP
+  document.querySelectorAll('a[href*="?categoria="]').forEach(link => {
+    link.addEventListener("click", (e) => {
+      const href = link.getAttribute("href") || "";
+      const m = href.match(/categoria=([^&#]+)/);
+      if (!m) return;
+      e.preventDefault();
+      const cat = decodeURIComponent(m[1].replace(/\+/g, " "));
+      document.querySelectorAll('a[href*="?categoria="]').forEach(a => {
+        a.classList.toggle("active", a === link);
+      });
+      document.querySelectorAll(".signal-card").forEach(card => {
+        const cardCat = (card.dataset.cat || card.querySelector(".badge-cat")?.textContent || "").trim();
+        if (!cardCat || card.classList.contains("module-card-item")) return;
+        card.style.display = (cat === "Todos" || cardCat.toUpperCase() === cat.toUpperCase()) ? "" : "none";
+      });
+      document.querySelectorAll("#histTable tbody tr, #vipHistTable tbody tr").forEach(row => {
+        const firstTd = row.querySelector("td");
+        const rowCat = firstTd ? firstTd.textContent.trim() : "";
+        row.style.display = (cat === "Todos" || !rowCat || rowCat.toUpperCase() === cat.toUpperCase()) ? "" : "none";
+      });
+    });
+  });
+
+  if (PAGE_KIND !== "academia") return;
+
+  function esc(s) {
+    return String(s || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function maskId(doc, email) {
+    const d = String(doc || "").trim();
+    if (d) {
+      const digits = d.replace(/\D/g, "");
+      if (digits.length === 11) return `***.${digits.slice(3, 6)}.${digits.slice(6, 9)}-**`;
+      if (d.length > 4) return `${d.slice(0, 2)}***${d.slice(-2)}`;
+      return "***";
+    }
+    const mail = String(email || "").trim();
+    if (mail.includes("@")) {
+      const [local, domain] = mail.split("@");
+      return `${local.slice(0, 2)}***@${domain}`;
+    }
+    return "Verificado";
+  }
+
+  function loadStudent() {
+    try { return JSON.parse(localStorage.getItem(STUDENT_KEY) || "null"); }
+    catch (e) { return null; }
+  }
+  function saveStudent(st) {
+    try { localStorage.setItem(STUDENT_KEY, JSON.stringify(st)); } catch (e) {}
+  }
+  function loadCerts() {
+    try { return JSON.parse(localStorage.getItem(CERTS_KEY) || "[]"); }
+    catch (e) { return []; }
+  }
+  function saveCerts(list) {
+    try { localStorage.setItem(CERTS_KEY, JSON.stringify(list)); } catch (e) {}
+  }
+
+  const cadastroEl = document.getElementById("cadastro");
+  const staticArea = document.getElementById("staticStudentArea");
+  const studentNameBadge = document.getElementById("staticStudentBadge");
+  const logoutBtn = document.getElementById("staticLogoutBtn");
+  const certsHost = document.getElementById("staticCertsHost");
+  const resultHost = document.getElementById("staticResultHost");
+  const certModal = document.getElementById("staticCertModal");
+
+  function openCertificateView(cert, student) {
+    if (!certModal) return;
+    const masked = maskId(student?.documento, student?.email);
+    certModal.innerHTML = `
+      <div class="panel cert-print-card" style="padding:36px; border:2px solid rgba(16, 185, 129, 0.55); background:radial-gradient(circle at top right, rgba(16,185,129,0.12), var(--surface) 60%); margin-bottom:28px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:22px; padding-bottom:16px; border-bottom:1px solid var(--border);">
+          <strong style="font-size:1.18rem;">Heurístika Academia Quantitativa</strong>
+          <span class="badge badge-buy">AUTENTICIDADE VERIFICADA</span>
+        </div>
+        <div class="mono" style="font-size:0.78rem; color:#34d399; letter-spacing:0.12em;">CERTIFICADO DE CONCLUSÃO &amp; PROFICIÊNCIA QUANTITATIVA</div>
+        <h2 style="margin:10px 0 16px; font-size:clamp(1.6rem, 3vw, 2.3rem);">${esc(student?.nome || "Aluno Heurístika")}</h2>
+        <p style="font-size:0.96rem; color:var(--text-soft); line-height:1.7; margin-bottom:22px;">
+          Concluiu com êxito a trilha educacional e foi aprovado(a) no <strong>Exame Avançado de Heurística Financeira, Gestão de Risco Quantitativa, Alocação Multi-Horizonte e Derivativos</strong>, obtendo aproveitamento de <strong class="text-green">${Math.round(cert.nota_pct)}% (${cert.acertos}/${cert.total} questões)</strong>.
+        </p>
+        <div class="kpi-grid" style="margin-bottom:22px;">
+          <div class="kpi-card"><div class="kpi-label">Código Verificador</div><div class="kpi-value" style="font-size:1.05rem; color:#34d399;">${esc(cert.codigo)}</div></div>
+          <div class="kpi-card"><div class="kpi-label">Data de Emissão</div><div class="kpi-value" style="font-size:1.05rem;">${esc(cert.emitido_em)}</div></div>
+          <div class="kpi-card"><div class="kpi-label">Identificação</div><div class="kpi-value" style="font-size:1.02rem;">${esc(masked)}</div></div>
+        </div>
+        <div class="no-print" style="display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap;">
+          <button type="button" class="btn btn-sm btn-electric" onclick="window.print()">Imprimir / Salvar PDF</button>
+          <button type="button" class="btn btn-sm btn-outline" id="closeStaticCertBtn">Fechar Visualização</button>
+        </div>
+      </div>
+    `;
+    certModal.style.display = "block";
+    certModal.scrollIntoView({ behavior: "smooth", block: "center" });
+    document.getElementById("closeStaticCertBtn")?.addEventListener("click", () => {
+      certModal.style.display = "none";
+    });
+  }
+
+  function renderCertsList(student) {
+    if (!certsHost) return;
+    const certs = loadCerts().filter(c => c.email === student?.email);
+    if (!certs.length) {
+      certsHost.innerHTML = "";
+      return;
+    }
+    certsHost.innerHTML = `
+      <div class="panel" style="margin-bottom:24px; border-color:rgba(16,185,129,0.4);">
+        <h2 style="margin:0 0 12px; font-size:1.15rem;">Seus Certificados Emitidos</h2>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          ${certs.map((c, idx) => `
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; background:var(--surface-2); padding:12px 14px; border-radius:10px; border:1px solid var(--border);">
+              <div>
+                <strong class="mono text-green">${esc(c.codigo)}</strong>
+                <span style="color:var(--muted); font-size:0.84rem; margin-left:8px;">Nota: ${Math.round(c.nota_pct)}% (${c.acertos}/${c.total}) • Emitido em ${esc(c.emitido_em)}</span>
+              </div>
+              <button type="button" class="btn btn-sm btn-electric open-static-cert-btn" data-cert-idx="${idx}">Abrir Certificado ↗</button>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `;
+    certsHost.querySelectorAll(".open-static-cert-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const c = certs[Number(btn.dataset.certIdx || 0)];
+        if (c) openCertificateView(c, student);
+      });
+    });
+  }
+
+  function syncAuthUi() {
+    const st = loadStudent();
+    const goExamBtns = document.querySelectorAll('a[href="#cadastro"], a[href="#prova"]');
+    if (st && st.nome && st.email) {
+      if (cadastroEl) cadastroEl.style.display = "none";
+      if (staticArea) staticArea.style.display = "block";
+      if (studentNameBadge) studentNameBadge.textContent = "ALUNO: " + String(st.nome).toUpperCase();
+      goExamBtns.forEach(a => a.setAttribute("href", "#prova"));
+      renderCertsList(st);
+    } else {
+      if (cadastroEl) cadastroEl.style.display = "";
+      if (staticArea) staticArea.style.display = "none";
+      goExamBtns.forEach(a => a.setAttribute("href", "#cadastro"));
+    }
+  }
+
+  document.querySelectorAll('form[action$="/academia/cadastro"]').forEach(form => {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const nome = (form.querySelector('[name="nome"]')?.value || "").trim();
+      const email = (form.querySelector('[name="email"]')?.value || "").trim().toLowerCase();
+      const documento = (form.querySelector('[name="documento"]')?.value || "").trim();
+      const pin = (form.querySelector('[name="pin"]')?.value || "").trim();
+      if (nome.length < 3 || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || pin.length < 4) {
+        if (window.hkToast) window.hkToast("Preencha nome completo, e-mail válido e PIN de 4+ dígitos.", "warning");
+        return;
+      }
+      saveStudent({ nome, email, documento, pin });
+      syncAuthUi();
+      if (window.hkToast) window.hkToast(`Cadastro concluído, ${nome}! Prova liberada.`, "success");
+      document.getElementById("prova")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+
+  document.querySelectorAll('form[action$="/academia/login"]').forEach(form => {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = (form.querySelector('[name="email"]')?.value || "").trim().toLowerCase();
+      const pin = (form.querySelector('[name="pin"]')?.value || "").trim();
+      const existing = loadStudent();
+      if (existing && existing.email === email && existing.pin === pin) {
+        syncAuthUi();
+        if (window.hkToast) window.hkToast(`Bem-vindo(a) de volta, ${existing.nome}!`, "success");
+        document.getElementById("prova")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else if (email.includes("@") && pin.length >= 4) {
+        const guessedName = existing?.nome || email.split("@")[0];
+        saveStudent({ nome: guessedName, email, documento: existing?.documento || "", pin });
+        syncAuthUi();
+        if (window.hkToast) window.hkToast(`Acesso liberado para ${guessedName}!`, "success");
+        document.getElementById("prova")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        if (window.hkToast) window.hkToast("Informe um e-mail válido e seu PIN de 4+ dígitos.", "warning");
+      }
+    });
+  });
+
+  logoutBtn?.addEventListener("click", () => {
+    try { localStorage.removeItem(STUDENT_KEY); } catch (e) {}
+    if (resultHost) resultHost.innerHTML = "";
+    if (certModal) certModal.style.display = "none";
+    syncAuthUi();
+    if (window.hkToast) window.hkToast("Você saiu da conta de aluno.", "success");
+  });
+
+  const examForm = document.getElementById("examForm");
+  if (examForm) {
+    examForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const st = loadStudent();
+      if (!st) {
+        if (window.hkToast) window.hkToast("Cadastre-se antes de enviar a prova.", "warning");
+        return;
+      }
+      let acertos = 0;
+      const revisao = [];
+      for (const q of QUESTIONS) {
+        const checked = examForm.querySelector(`input[name="${q.id}"]:checked`);
+        if (!checked) return;
+        const val = checked.value.toLowerCase();
+        const ok = val === q.correta;
+        if (ok) acertos++;
+        revisao.push({
+          enunciado: q.enunciado,
+          acertou: ok,
+          resposta_usuario: val.toUpperCase(),
+          correta: q.correta.toUpperCase(),
+          explicacao: q.explicacao,
+        });
+      }
+      const total = QUESTIONS.length || 10;
+      const nota_pct = Math.round((acertos / total) * 1000) / 10;
+      const aprovado = nota_pct >= 70;
+      let certObj = null;
+      if (aprovado) {
+        const hex1 = Math.floor(1000 + Math.random() * 9000).toString(16).toUpperCase();
+        const hex2 = Math.floor(1000 + Math.random() * 9000).toString(16).toUpperCase();
+        const now = new Date();
+        const dtStr = now.toLocaleDateString("pt-BR") + " " + now.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+        certObj = {
+          codigo: `CERT-HRK-${hex1}-${hex2}`,
+          nota_pct,
+          acertos,
+          total,
+          emitido_em: dtStr,
+          email: st.email,
+        };
+        const allCerts = loadCerts();
+        allCerts.unshift(certObj);
+        saveCerts(allCerts);
+        renderCertsList(st);
+      }
+
+      if (resultHost) {
+        resultHost.innerHTML = `
+          <div class="panel" style="margin-bottom:28px; border-color:${aprovado ? 'rgba(16,185,129,0.5)' : 'rgba(255,71,87,0.45)'};" id="resultado-prova">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
+              <div>
+                <span class="badge ${aprovado ? 'badge-buy' : 'badge-loss'}">
+                  ${aprovado ? 'APROVADO NA CERTIFICAÇÃO' : 'NÃO APROVADO (MÍNIMO 70%)'}
+                </span>
+                <h2 style="margin:8px 0 0;">Nota Final: ${Math.round(nota_pct)}% (${acertos}/${total})</h2>
+              </div>
+              ${certObj ? `<button type="button" class="btn btn-electric" id="viewLatestStaticCertBtn">Visualizar Certificado (${esc(certObj.codigo)})</button>` : ''}
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              ${revisao.map(r => `
+                <div style="background:var(--surface-2); padding:10px 12px; border-radius:8px; font-size:0.84rem;">
+                  <strong class="${r.acertou ? 'text-green' : 'text-red'}">${r.acertou ? '✓ CORRETA' : '✕ INCORRETA'}</strong> — ${esc(r.enunciado)}
+                  <div class="mono" style="font-size:0.76rem; color:var(--text-soft); margin-top:4px;">
+                    Sua resposta: <strong>${esc(r.resposta_usuario)}</strong>${!r.acertou ? ` • Correta: <strong class="text-green">${esc(r.correta)}</strong>` : ''}
+                  </div>
+                  <div style="color:var(--muted); margin-top:4px;">${esc(r.explicacao)}</div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `;
+        document.getElementById("viewLatestStaticCertBtn")?.addEventListener("click", () => {
+          if (certObj) openCertificateView(certObj, st);
+        });
+        document.getElementById("resultado-prova")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+      if (window.hkToast) {
+        window.hkToast(
+          aprovado
+            ? `Parabéns! Aprovado com ${Math.round(nota_pct)}%. Certificado emitido!`
+            : `Nota: ${Math.round(nota_pct)}%. Atingir 70% (7/10) para emitir certificado.`,
+          aprovado ? "success" : "warning"
+        );
+      }
+    });
+  }
+
+  syncAuthUi();
+})();
+</script>
+
+</body>
+</html>

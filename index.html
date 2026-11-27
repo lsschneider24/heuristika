@@ -1,0 +1,2338 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Heurístika — Sinais &amp; Assimetria de Mercado</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./static/style.css" />
+</head>
+<body>
+  <div id="cursorSpotlight" class="cursor-spotlight" aria-hidden="true"></div>
+  <div id="hkToastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- Main Header (Clean XM White Navbar) -->
+  <header class="navbar no-print">
+    <div class="container nav-inner" style="padding-top:12px; padding-bottom:12px;">
+      <a href="./index.html" class="brand">
+        <span class="brand-hex" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <rect x="2" y="2" width="20" height="20" rx="6" fill="rgba(16,185,129,0.14)" stroke="#10b981" stroke-width="1.6"/>
+            <path d="M7 15.5L10.5 11.5L13.5 13.5L17.5 8.5" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="17.5" cy="8.5" r="1.6" fill="#10b981"/>
+          </svg>
+        </span>
+        <span class="brand-name">Heurístika</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Principal" style="gap:24px;">
+        <a href="./index.html" class="nav-item active">Início</a>
+        <a href="./carteiras/" class="nav-item ">Carteiras</a>
+        <a href="./academia/" class="nav-item ">Academia</a>
+        <a href="./index.html#planos" class="nav-item">Planos</a>
+      </nav>
+
+      <div class="nav-cta">
+        
+          <a href="./login/" class="btn btn-sm btn-outline ">Entrar</a>
+          <a href="./index.html#planos" class="btn btn-sm btn-electric">Acesso VIP</a>
+        
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+    
+
+    
+<!-- Broker-Grade Dark Hero (IC Markets + XM inspired) -->
+<section class="broker-hero">
+  <!-- Suporte opcional a vídeo MP4 real (basta salvar em static/hero-candles.mp4) -->
+  <video class="hero-video" autoplay muted loop playsinline onerror="this.style.display='none'">
+    <source src="./static/hero-candles.mp4" type="video/mp4" />
+  </video>
+  <!-- Vídeo procedural 60fps de Candles 3D em Alta (sempre ativo) -->
+  <canvas id="heroCanvas" class="hero-canvas" aria-hidden="true"></canvas>
+  <div class="hero-scrim" aria-hidden="true"></div>
+
+  <div class="container hero-grid">
+    <div>
+      <div class="hero-pill stagger-1">
+        <span class="live-dot-pulse" style="display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--electric);"></span>
+        <span>HEURÍSTICA FINANCEIRA • AUDITORIA AO VIVO</span>
+      </div>
+      <h1 class="hero-headline stagger-2">
+        Decisões de Mercado<br/>
+        <span class="thin">com Assimetria Quantitativa.</span>
+      </h1>
+      <p class="hero-desc stagger-3">
+        Sinais em <strong>Forex, Cripto, Índices, Futuros, Ações e Fundos</strong> com entrada, alvos e stop auditados em tempo real.
+      </p>
+      <div class="hero-buttons stagger-4">
+        
+          <a href="#planos" class="btn btn-electric">Desbloquear VIP</a>
+          <a href="./login/" class="btn btn-outline">Já sou Assinante</a>
+        
+      </div>
+    </div>
+
+    <div class="terminal-stage stagger-5">
+      <div class="floating-ticker-chip">
+        <span class="text-green">●</span>
+        <strong>Binance • Yahoo Finance • Stooq</strong>
+        <span style="color:var(--muted);">Feed Auditado</span>
+      </div>
+      <div class="terminal-window">
+        <div class="term-top">
+          <div class="term-dots"><span></span><span></span><span></span></div>
+          <span class="mono" style="font-size:0.72rem; color:var(--muted);">AUDITORIA LIVE (TODOS)</span>
+          <span class="badge badge-buy">3 ENCERRADOS</span>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:baseline;">
+          <div>
+            <div style="font-size:0.72rem; color:var(--muted); text-transform:uppercase;">Taxa de Acerto</div>
+            <div class="mono" style="font-size:2rem; font-weight:800; color:var(--electric);">66,7%</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:0.72rem; color:var(--muted); text-transform:uppercase;">Acertos / Stops</div>
+            <div class="mono" style="font-size:1.1rem; font-weight:700;">
+              <span class="text-green">2</span> / <span class="text-red">1</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-box" id="equityChartBox" data-points='[0.0, 4.86, 5.76, 5.12]'>
+          <svg id="equitySvg" viewBox="0 0 400 120" preserveAspectRatio="none" style="width:100%; height:100%; display:block;"></svg>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; font-size:0.76rem; color:var(--muted);" class="mono">
+          <span>TP1: 1 • TP2: 1</span>
+          <span>Em Aberto: <strong class="text-amber">1</strong></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5-Column Broker Metrics Bar -->
+  <div class="broker-metrics-bar">
+    <div class="container metrics-5">
+      <div class="metric-col">
+        <div class="metric-val odometer" data-odo="66,7%">66,7%</div>
+        <div class="metric-lbl">TAXA DE ACERTO</div>
+      </div>
+      <div class="metric-col">
+        <div class="metric-val odometer" data-odo="2">2</div>
+        <div class="metric-lbl">ALVOS (TP1/TP2)</div>
+      </div>
+      <div class="metric-col">
+        <div class="metric-val count-up" data-target="6" data-suffix="" data-decimals="0">6</div>
+        <div class="metric-lbl">MERCADOS</div>
+      </div>
+      <div class="metric-col">
+        <div class="metric-val">24/7</div>
+        <div class="metric-lbl">AUDITORIA</div>
+      </div>
+      <div class="metric-col">
+        <div class="metric-val">0%</div>
+        <div class="metric-lbl">EDIÇÃO MANUAL</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- XM-Style Split: Iniciante vs. Experiente -->
+<section class="container" aria-label="Escolha seu caminho">
+  <div class="xm-split-grid">
+    <div class="xm-split-light">
+      <div class="mono" style="font-size:0.74rem; color:#1669f2; font-weight:700; text-transform:uppercase; margin-bottom:6px;">Para quem está começando</div>
+      <h2 style="margin:0 0 8px; font-size:1.35rem; color:#0e1629;">Novo no mercado financeiro?</h2>
+      <p style="margin:0 0 18px; font-size:0.9rem; color:#475569; line-height:1.55;">
+        Aprenda em linguagem simples como seguir os sinais passo a passo, proteger seu dinheiro com Stop Loss e montar sua carteira ideal em 3 perguntas.
+      </p>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a href="./academia/" class="btn btn-sm btn-electric">Começar na Academia ↗</a>
+        <a href="./carteiras/" class="btn btn-sm btn-outline">Montar Minha Carteira</a>
+      </div>
+    </div>
+    <div class="xm-split-dark">
+      <div class="mono" style="font-size:0.74rem; color:#60a5fa; font-weight:700; text-transform:uppercase; margin-bottom:6px;">Para quem já opera</div>
+      <h2 style="margin:0 0 8px; font-size:1.35rem; color:#ffffff;">Já investe ou é assinante VIP?</h2>
+      <p style="margin:0 0 18px; font-size:0.9rem; color:#cbd5e1; line-height:1.55;">
+        Acesse direto os sinais selecionados pelo Analista Avançado (Score 0–100), com entrada, alvos, stop e compartilhamento em 1 clique no WhatsApp.
+      </p>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a href="./login/" class="btn btn-sm btn-electric">Abrir Sinais VIP ↗</a>
+        <a href="#simulador-rendimento" class="btn btn-sm btn-outline" style="background:rgba(255,255,255,0.08)!important; color:#fff!important; border-color:rgba(255,255,255,0.28)!important;">Simular desde 01/01/2026</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Simulador Inteligente de Sinais Reais (com Cenários e Data desde 01/01/2026) -->
+<section class="container" id="simulador-rendimento" style="margin:28px auto;">
+  <div class="card" style="padding:24px; border:1px solid var(--border); border-radius:14px; background:linear-gradient(180deg, rgba(15,23,42,0.95) 0%, rgba(15,23,42,0.8) 100%); box-shadow:0 12px 36px rgba(0,0,0,0.35);">
+    
+    <!-- Topo do Simulador -->
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; margin-bottom:18px;">
+      <div>
+        <div class="mono" style="font-size:0.75rem; color:var(--electric); text-transform:uppercase; letter-spacing:0.05em; font-weight:700;">
+          ⚡ MOTOR QUANTITATIVO • SIMULADOR DE SINAIS REAIS
+        </div>
+        <h2 style="margin:4px 0 2px; font-size:1.25rem; font-weight:800; letter-spacing:-0.02em;">
+          Simule Seu Patrimônio com os Sinais Oficiais
+        </h2>
+        <p style="margin:0; font-size:0.84rem; color:var(--muted);">
+          Escolha um cenário pré-definido ou defina sua data (disponível desde 01/01/2026) para conferir o resultado real auditado.
+        </p>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span id="simCountBadge" class="badge badge-cat" style="font-size:0.8rem; padding:6px 10px;">0 sinais no período</span>
+        <span class="badge badge-buy" style="font-size:0.8rem; padding:6px 10px;">Auditado em SQLite</span>
+      </div>
+    </div>
+
+    <!-- Cenários Pré-Definidos -->
+    <div style="margin-bottom:16px;">
+      <div style="font-size:0.75rem; font-weight:600; text-transform:uppercase; color:var(--text-soft); margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+        <span>🎯 Escolha um Cenário Pré-Definido:</span>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:8px;">
+        <button type="button" class="btn btn-sm btn-electric sim-scenario-btn active" data-scenario="all" title="Segue 100% dos sinais oficiais da Heurístika">
+          <strong>🌟 Oficial Heurístika</strong>
+          <span style="font-size:0.72rem; display:block; opacity:0.85; font-weight:normal;">100% dos sinais emitidos</span>
+        </button>
+        <button type="button" class="btn btn-sm btn-outline sim-scenario-btn" data-scenario="conservative" title="Limita o risco a 1% do capital por trade para controle de drawdown">
+          <strong>🛡️ Conservador (Kelly 1%)</strong>
+          <span style="font-size:0.72rem; display:block; opacity:0.85; font-weight:normal;">Risco controlado por trade</span>
+        </button>
+        <button type="button" class="btn btn-sm btn-outline sim-scenario-btn" data-scenario="high_asymmetry" title="Apenas operações com relação risco/retorno favorável e alvos longos">
+          <strong>🚀 Alta Assimetria (2:1+)</strong>
+          <span style="font-size:0.72rem; display:block; opacity:0.85; font-weight:normal;">Foco em TP2 e grandes altas</span>
+        </button>
+        <button type="button" class="btn btn-sm btn-outline sim-scenario-btn" data-scenario="crypto_fx" title="Mercado internacional 24/7 (Bitcoin, Ethereum, Moedas e Índices)">
+          <strong>🌐 Cripto &amp; Global (24/7)</strong>
+          <span style="font-size:0.72rem; display:block; opacity:0.85; font-weight:normal;">BTC, ETH, FX e S&amp;P 500</span>
+        </button>
+        <button type="button" class="btn btn-sm btn-outline sim-scenario-btn" data-scenario="b3" title="Mercado brasileiro em Reais (Ações e Fundos Imobiliários)">
+          <strong>🇧🇷 Ações Brasil &amp; FIIs</strong>
+          <span style="font-size:0.72rem; display:block; opacity:0.85; font-weight:normal;">PETR4, VALE3, MXRF11...</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Presets de Capital e Período -->
+    <div style="background:rgba(255,255,255,0.02); padding:14px; border-radius:10px; border:1px solid rgba(148,163,184,0.12); margin-bottom:18px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
+        <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+          <span style="font-size:0.74rem; color:var(--muted); margin-right:4px;">Capital:</span>
+          <button type="button" class="btn btn-xs btn-outline sim-preset-v" data-val="1000">R$ 1.000</button>
+          <button type="button" class="btn btn-xs btn-outline sim-preset-v" data-val="5000">R$ 5.000</button>
+          <button type="button" class="btn btn-xs btn-outline sim-preset-v active" data-val="10000">R$ 10.000</button>
+          <button type="button" class="btn btn-xs btn-outline sim-preset-v" data-val="50000">R$ 50.000</button>
+          <button type="button" class="btn btn-xs btn-outline sim-preset-v" data-val="100000">R$ 100.000</button>
+        </div>
+        <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+          <span style="font-size:0.74rem; color:var(--muted); margin-right:4px;">Período:</span>
+          <button type="button" class="btn btn-xs btn-electric sim-preset-p" data-period="from_2026_01_01" style="font-weight:700;">
+            🗓️ Desde 01/01/2026
+          </button>
+          <button type="button" class="btn btn-xs btn-outline sim-preset-p" data-period="all">Todo o Histórico</button>
+          <button type="button" class="btn btn-xs btn-outline sim-preset-p" data-period="30">Últimos 30d</button>
+          <button type="button" class="btn btn-xs btn-outline sim-preset-p" data-period="90">Últimos 90d</button>
+        </div>
+      </div>
+
+      <!-- Inputs Customizados de Capital e Datas -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; align-items:end;">
+        <div>
+          <label for="simValor" style="display:block; font-size:0.76rem; color:var(--muted); margin-bottom:4px; font-weight:600;">
+            Capital Inicial Customizado (R$)
+          </label>
+          <input id="simValor" type="number" min="0" step="100" value="10000" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid rgba(148,163,184,0.3); background:#0f172a; color:#f8fafc; font-size:0.95rem; font-weight:600;" />
+        </div>
+        <div>
+          <label for="simStartDate" style="display:block; font-size:0.76rem; color:var(--muted); margin-bottom:4px; font-weight:600;">
+            Data Inicial (Livre desde 01/01/2026)
+          </label>
+          <input id="simStartDate" type="date" value="2026-01-01" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid rgba(148,163,184,0.3); background:#0f172a; color:#f8fafc; color-scheme:dark; font-size:0.95rem;" />
+        </div>
+        <div>
+          <label for="simEndDate" style="display:block; font-size:0.76rem; color:var(--muted); margin-bottom:4px; font-weight:600;">
+            Data Final
+          </label>
+          <input id="simEndDate" type="date" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid rgba(148,163,184,0.3); background:#0f172a; color:#f8fafc; color-scheme:dark; font-size:0.95rem;" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Cards de Resultados Inteligentes -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:12px; margin-bottom:18px;">
+      <div style="padding:14px; border-radius:10px; background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.25);">
+        <div style="font-size:0.72rem; color:var(--muted); text-transform:uppercase; font-weight:600;">Montante Final</div>
+        <div id="simOutTotal" class="mono" style="font-size:1.25rem; font-weight:800; color:#10b981; margin-top:4px;">R$ 10.000,00</div>
+        <div id="simOutProfitDiff" style="font-size:0.75rem; color:#10b981; margin-top:2px; font-weight:600;">+R$ 0,00 de lucro</div>
+      </div>
+      <div style="padding:14px; border-radius:10px; background:rgba(255,255,255,0.03); border:1px solid var(--border);">
+        <div style="font-size:0.72rem; color:var(--muted); text-transform:uppercase; font-weight:600;">Retorno Acumulado</div>
+        <div id="simOutTotalPct" class="mono" style="font-size:1.25rem; font-weight:800; color:var(--electric); margin-top:4px;">0,00%</div>
+        <div id="simOutPayoffRatio" style="font-size:0.75rem; color:var(--text-soft); margin-top:2px;">Payoff: 0.0x</div>
+      </div>
+      <div style="padding:14px; border-radius:10px; background:rgba(255,255,255,0.03); border:1px solid var(--border);">
+        <div style="font-size:0.72rem; color:var(--muted); text-transform:uppercase; font-weight:600;">Taxa de Acerto (Win Rate)</div>
+        <div id="simOutWinRate" class="mono" style="font-size:1.25rem; font-weight:800; color:#f8fafc; margin-top:4px;">0,0%</div>
+        <div id="simOutWinLossCount" style="font-size:0.75rem; color:var(--text-soft); margin-top:2px;">0 vitórias / 0 stops</div>
+      </div>
+      <div style="padding:14px; border-radius:10px; background:rgba(255,255,255,0.03); border:1px solid var(--border);">
+        <div style="font-size:0.72rem; color:var(--muted); text-transform:uppercase; font-weight:600;">Média Mensal (% a.m.)</div>
+        <div id="simOutMes" class="mono" style="font-size:1.25rem; font-weight:800; color:var(--electric); margin-top:4px;">0,00% a.m.</div>
+        <div id="simOutAno" style="font-size:0.75rem; color:#22c55e; margin-top:2px; font-weight:600;">0,00% a.a.</div>
+      </div>
+    </div>
+
+    <!-- Gráfico Visual de Evolução do Saldo (Equity Curve SVG) -->
+    <div style="background:rgba(10,15,30,0.8); border:1px solid rgba(148,163,184,0.15); border-radius:10px; padding:16px; margin-bottom:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+        <span class="mono" style="font-size:0.74rem; color:var(--muted); text-transform:uppercase; font-weight:700;">
+          📈 Trajetória do Capital (Evolução Trade a Trade)
+        </span>
+        <span id="simGraphHoverInfo" class="mono" style="font-size:0.74rem; color:var(--electric);">
+          Passe o mouse ou toque nos pontos para ver os valores
+        </span>
+      </div>
+      <div style="width:100%; height:160px; position:relative;" id="simChartContainer">
+        <svg id="simEquitySvg" width="100%" height="100%" viewBox="0 0 600 160" preserveAspectRatio="none" style="overflow:visible;"></svg>
+      </div>
+    </div>
+
+    <!-- Tabela / Drawer Acordeom de Sinais do Cenário -->
+    <details style="background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:8px; padding:10px 14px;">
+      <summary style="cursor:pointer; font-size:0.82rem; font-weight:600; color:var(--text-soft); user-select:none; display:flex; justify-content:space-between; align-items:center;">
+        <span>🔍 Ver lista detalhada das operações incluídas nesta simulação</span>
+        <span class="badge badge-cat" id="simDetailCountBadge">Ver detalhes</span>
+      </summary>
+      <div style="max-height:240px; overflow-y:auto; margin-top:12px;">
+        <table style="width:100%; border-collapse:collapse; font-size:0.78rem;">
+          <thead>
+            <tr style="border-bottom:1px solid var(--border); color:var(--muted); text-align:left;">
+              <th style="padding:6px;">Data</th>
+              <th style="padding:6px;">Ativo</th>
+              <th style="padding:6px;">Direção</th>
+              <th style="padding:6px;">Status</th>
+              <th style="padding:6px; text-align:right;">Resultado %</th>
+              <th style="padding:6px; text-align:right;">Saldo Acumulado</th>
+            </tr>
+          </thead>
+          <tbody id="simSignalsTbody">
+            <!-- preenchido dinamicamente via JS -->
+          </tbody>
+        </table>
+      </div>
+    </details>
+
+  </div>
+</section>
+
+<script>
+(() => {
+  const rawSignals = [{"ativo": "SPX500", "categoria": "\u00cdndices", "criado_em": "2026-11-26 21:53:52", "destino": "FREE", "direcao": "VENDA", "encerrado_em": "2026-11-27 02:53:52", "entrada": 5940.0, "id": 7, "observacao": "Rejei\u00e7\u00e3o em resist\u00eancia, mas fluxo comprador acionou SL.", "origem": "ROBO", "preco_atual": 5980.0, "resultado_pct": -0.64, "sl": 5978.0, "status": "ERRO_SL", "telegram_free_msg_id": null, "telegram_vip_msg_id": null, "tp1": 5885.0, "tp2": 5830.0}, {"ativo": "EUR/USD", "categoria": "Forex", "criado_em": "2026-11-26 17:53:52", "destino": "AMBOS", "direcao": "COMPRA", "encerrado_em": "2026-11-27 00:53:52", "entrada": 1.052, "id": 6, "observacao": "Sinal vitrine ap\u00f3s defesa de suporte di\u00e1rio.", "origem": "MANUAL", "preco_atual": 1.062, "resultado_pct": 0.9, "sl": 1.048, "status": "ACERTO_TP1", "telegram_free_msg_id": null, "telegram_vip_msg_id": null, "tp1": 1.0615, "tp2": 1.069}, {"ativo": "BTC/USD", "categoria": "Cripto", "criado_em": "2026-11-26 05:53:52", "destino": "VIP", "direcao": "COMPRA", "encerrado_em": "2026-11-26 13:53:52", "entrada": 88500.0, "id": 5, "observacao": "Rompimento de EMA9/21 com volume institucional.", "origem": "ROBO", "preco_atual": 92950.0, "resultado_pct": 4.86, "sl": 87200.0, "status": "ACERTO_TP2", "telegram_free_msg_id": null, "telegram_vip_msg_id": null, "tp1": 90200.0, "tp2": 92800.0}] || [];
+  const signals = rawSignals.map((s, idx) => {
+    const dtStr = String(s.encerrado_em || s.criado_em || s.closed_at || s.created_at || "").slice(0, 10);
+    return {
+      idx,
+      id: s.id,
+      ativo: s.ativo || "ATIVO",
+      categoria: s.categoria || "Geral",
+      direcao: s.direcao || "COMPRA",
+      status: s.status || "FECHADO",
+      dt: dtStr,
+      pct: parseFloat(s.resultado_pct || 0) || 0,
+    };
+  });
+  const dated = signals.filter(s => /^\d{4}-\d{2}-\d{2}$/.test(s.dt)).sort((a, b) => a.dt.localeCompare(b.dt));
+
+  const elV = document.getElementById("simValor");
+  const elS = document.getElementById("simStartDate");
+  const elE = document.getElementById("simEndDate");
+  const badge = document.getElementById("simCountBadge");
+  const detailBadge = document.getElementById("simDetailCountBadge");
+  const outPct = document.getElementById("simOutTotalPct");
+  const outM = document.getElementById("simOutMes");
+  const outA = document.getElementById("simOutAno");
+  const outT = document.getElementById("simOutTotal");
+  const outProfitDiff = document.getElementById("simOutProfitDiff");
+  const outWinRate = document.getElementById("simOutWinRate");
+  const outWinLoss = document.getElementById("simOutWinLossCount");
+  const outPayoff = document.getElementById("simOutPayoffRatio");
+  const tbody = document.getElementById("simSignalsTbody");
+  const svg = document.getElementById("simEquitySvg");
+  const graphHover = document.getElementById("simGraphHoverInfo");
+  if (!elV || !elS || !elE) return;
+
+  let currentScenario = "all";
+  const todayIso = new Date().toISOString().slice(0, 10);
+
+  // Inicializa padrão solicitado: desde 01/01/2026
+  elS.value = "2026-01-01";
+  elE.value = todayIso;
+
+  const fmt = (n) => n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  const fmtPct = (n) => `${n >= 0 ? "+" : ""}${n.toFixed(2).replace(".", ",")}%`;
+
+  function filterScenario(sList, sc) {
+    if (sc === "conservative") {
+      return sList.map(s => {
+        let adjPct = s.pct;
+        if (adjPct < 0) adjPct = -1.0;
+        else adjPct = Math.min(adjPct, 3.0);
+        return { ...s, pct: adjPct };
+      });
+    }
+    if (sc === "high_asymmetry") {
+      return sList.filter(s => s.pct >= 1.5 || s.pct <= -0.5);
+    }
+    if (sc === "crypto_fx") {
+      const globKeys = ["BTC", "ETH", "EUR", "GBP", "ES=F", "NQ=F", "SPX", "USD"];
+      return sList.filter(s => globKeys.some(k => (s.ativo || "").toUpperCase().includes(k)) || s.categoria === "Cripto" || s.categoria === "Forex" || s.categoria === "Indices");
+    }
+    if (sc === "b3") {
+      const b3Keys = ["PETR4", "VALE3", "MXRF11", "HGLG11", "BOVA11", "ITUB4", "B3SA3"];
+      return sList.filter(s => b3Keys.some(k => (s.ativo || "").toUpperCase().includes(k)) || s.categoria === "Ações B3" || s.categoria === "FIIs");
+    }
+    return sList;
+  }
+
+  function calc() {
+    const v = Math.max(0, parseFloat(elV.value) || 0);
+    const d0 = elS.value;
+    const d1 = elE.value;
+
+    let inRange = signals;
+    if (d0 && dated.length > 0) {
+      inRange = signals.filter(s => (!s.dt || (s.dt >= d0 && (!d1 || s.dt <= d1))));
+    } else if (d0) {
+      inRange = signals.filter(s => !s.dt || s.dt >= d0);
+    }
+    if (d1) {
+      inRange = inRange.filter(s => !s.dt || s.dt <= d1);
+    }
+
+    const sel = filterScenario(inRange, currentScenario);
+    const count = sel.length;
+    badge.textContent = `${count} ${count === 1 ? "sinal" : "sinais"} no período`;
+    if (detailBadge) detailBadge.textContent = `${count} operações`;
+
+    let mult = 1.0;
+    let equitySeries = [v];
+    let wins = 0;
+    let losses = 0;
+    let sumWinPct = 0;
+    let sumLossPct = 0;
+    let tableRows = "";
+
+    for (const s of sel) {
+      mult *= (1.0 + s.pct / 100.0);
+      const nextVal = v * mult;
+      equitySeries.push(nextVal);
+
+      if (s.pct >= 0) {
+        wins++;
+        sumWinPct += s.pct;
+      } else {
+        losses++;
+        sumLossPct += Math.abs(s.pct);
+      }
+
+      const isWin = s.pct >= 0;
+      tableRows += `
+        <tr style="border-bottom:1px solid rgba(148,163,184,0.1);">
+          <td style="padding:6px; font-family:monospace; color:var(--muted);">${s.dt || "2026-11"}</td>
+          <td style="padding:6px; font-weight:700;">${s.ativo}</td>
+          <td style="padding:6px;"><span class="badge ${s.direcao === 'COMPRA' ? 'badge-buy' : 'badge-sell'}" style="font-size:0.68rem; padding:2px 6px;">${s.direcao}</span></td>
+          <td style="padding:6px; color:var(--text-soft);">${s.status}</td>
+          <td style="padding:6px; text-align:right; font-family:monospace; font-weight:700; color:${isWin ? '#10b981' : '#f43f5e'};">${fmtPct(s.pct)}</td>
+          <td style="padding:6px; text-align:right; font-family:monospace; font-weight:600;">${fmt(nextVal)}</td>
+        </tr>
+      `;
+    }
+
+    if (tbody) tbody.innerHTML = tableRows || `<tr><td colspan="6" style="padding:16px; text-align:center; color:var(--muted);">Nenhum sinal neste período ou cenário.</td></tr>`;
+
+    const totalRet = (mult - 1.0) * 100.0;
+    const finalVal = v * mult;
+    const profit = finalVal - v;
+
+    let days = 30;
+    if (d0 && d1) {
+      const diff = Math.round((new Date(d1 + "T00:00:00") - new Date(d0 + "T00:00:00")) / 86400000);
+      if (diff >= 1) days = diff;
+    } else if (dated.length >= 2) {
+      const diff = Math.round((new Date(dated[dated.length - 1].dt + "T00:00:00") - new Date(dated[0].dt + "T00:00:00")) / 86400000);
+      if (diff >= 1) days = diff;
+    }
+    const months = Math.max(1, days / 30.4375);
+    const years = Math.max(1 / 12, days / 365.25);
+    const mPct = count > 0 && mult > 0 ? (Math.pow(mult, 1 / months) - 1) * 100 : 0;
+    const aPct = count > 0 && mult > 0 ? (Math.pow(mult, 1 / years) - 1) * 100 : 0;
+
+    const winRate = count > 0 ? (wins / count) * 100 : 0;
+    const avgWin = wins > 0 ? (sumWinPct / wins) : 0;
+    const avgLoss = losses > 0 ? (sumLossPct / losses) : 1;
+    const payoff = avgLoss > 0 ? (avgWin / avgLoss) : avgWin;
+
+    outPct.textContent = fmtPct(totalRet);
+    outPct.style.color = totalRet >= 0 ? "var(--electric)" : "#f43f5e";
+    outM.textContent = `${fmtPct(mPct)} a.m.`;
+    outA.textContent = days >= 15 ? `${fmtPct(aPct)} a.a. estimado` : "N/D (< 15d)";
+    outT.textContent = fmt(finalVal);
+    outProfitDiff.textContent = `${profit >= 0 ? "+" : ""}${fmt(profit)} de lucro líquido`;
+    outProfitDiff.style.color = profit >= 0 ? "#10b981" : "#f43f5e";
+    if (outWinRate) outWinRate.textContent = `${winRate.toFixed(1).replace(".", ",")}%`;
+    if (outWinLoss) outWinLoss.textContent = `${wins} vitórias / ${losses} stops`;
+    if (outPayoff) outPayoff.textContent = `Payoff: ${payoff.toFixed(2)}x`;
+
+    drawEquitySvg(equitySeries, sel);
+  }
+
+  function drawEquitySvg(points, sList) {
+    if (!svg || points.length === 0) return;
+    const W = 600;
+    const H = 160;
+    const pad = 24;
+    const minP = Math.min(...points);
+    const maxP = Math.max(...points);
+    const span = Math.max(1, maxP - minP);
+
+    const getX = (i) => pad + (i / Math.max(1, points.length - 1)) * (W - pad * 2);
+    const getY = (val) => H - pad - ((val - minP) / span) * (H - pad * 2);
+
+    let pathD = `M ${getX(0)} ${getY(points[0])}`;
+    for (let i = 1; i < points.length; i++) {
+      pathD += ` L ${getX(i)} ${getY(points[i])}`;
+    }
+
+    const baselineY = getY(points[0]);
+    let svgHtml = `
+      <defs>
+        <linearGradient id="eqGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#10b981" stop-opacity="0.32"/>
+          <stop offset="100%" stop-color="#10b981" stop-opacity="0.0"/>
+        </linearGradient>
+      </defs>
+      <line x1="${pad}" y1="${baselineY}" x2="${W - pad}" y2="${baselineY}" stroke="rgba(148,163,184,0.25)" stroke-dasharray="4,4" stroke-width="1.2"/>
+      <text x="${W - pad}" y="${baselineY - 4}" fill="#94a3b8" font-size="10" text-anchor="end" font-family="monospace">Base: ${fmt(points[0])}</text>
+
+      <path d="${pathD} L ${getX(points.length - 1)} ${H - pad} L ${getX(0)} ${H - pad} Z" fill="url(#eqGrad)"/>
+      <path d="${pathD}" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    `;
+
+    points.forEach((val, idx) => {
+      const cx = getX(idx);
+      const cy = getY(val);
+      const sig = idx > 0 ? sList[idx - 1] : null;
+      const desc = sig ? `${sig.ativo} (${fmtPct(sig.pct)}) ➔ ${fmt(val)}` : `Capital inicial: ${fmt(val)}`;
+      svgHtml += `
+        <circle cx="${cx}" cy="${cy}" r="4" fill="#0f172a" stroke="#10b981" stroke-width="2" style="cursor:pointer;" data-tip="${desc}" class="sim-dot"/>
+      `;
+    });
+
+    svg.innerHTML = svgHtml;
+
+    svg.querySelectorAll(".sim-dot").forEach(dot => {
+      dot.addEventListener("mouseenter", () => {
+        dot.setAttribute("r", "7");
+        if (graphHover) graphHover.textContent = dot.dataset.tip;
+      });
+      dot.addEventListener("mouseleave", () => {
+        dot.setAttribute("r", "4");
+        if (graphHover) graphHover.textContent = "Passe o mouse ou toque nos pontos para ver os valores";
+      });
+    });
+  }
+
+  // Cenários
+  document.querySelectorAll(".sim-scenario-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".sim-scenario-btn").forEach(b => {
+        b.classList.remove("active", "btn-electric");
+        b.classList.add("btn-outline");
+      });
+      btn.classList.add("active", "btn-electric");
+      btn.classList.remove("btn-outline");
+      currentScenario = btn.dataset.scenario;
+      calc();
+    });
+  });
+
+  // Presets de Capital
+  document.querySelectorAll(".sim-preset-v").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".sim-preset-v").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      elV.value = btn.dataset.val;
+      calc();
+    });
+  });
+
+  // Presets de Período
+  document.querySelectorAll(".sim-preset-p").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".sim-preset-p").forEach(b => {
+        b.classList.remove("active", "btn-electric");
+        b.classList.add("btn-outline");
+      });
+      btn.classList.add("active", "btn-electric");
+      btn.classList.remove("btn-outline");
+
+      const p = btn.dataset.period;
+      if (p === "from_2026_01_01") {
+        elS.value = "2026-01-01";
+        elE.value = todayIso;
+      } else if (p === "all") {
+        elS.value = dated.length > 0 ? dated[0].dt : "2026-01-01";
+        elE.value = todayIso;
+      } else {
+        const end = new Date(todayIso + "T00:00:00");
+        const start = new Date(end.getTime() - parseInt(p, 10) * 86400000);
+        elS.value = start.toISOString().slice(0, 10);
+        elE.value = todayIso;
+      }
+      calc();
+    });
+  });
+
+  elV.addEventListener("input", calc);
+  elS.addEventListener("change", calc);
+  elE.addEventListener("change", calc);
+  calc();
+})();
+</script>
+
+<!-- Divulgação Progressiva XM: Fontes e Mercados recolhidos para não poluir a Home -->
+<div class="container" style="margin:18px auto;">
+  <details style="padding:14px 18px;">
+    <summary style="cursor:pointer; font-weight:700; font-size:0.9rem; display:flex; justify-content:space-between; align-items:center;">
+      <span>🔍 Ver fontes de dados oficiais (Binance, Yahoo, CVM) e mercados monitorados</span>
+      <span class="badge badge-cat">Mostrar mais</span>
+    </summary>
+<!-- Fontes de Dados & Verificação Institucional -->
+<section class="sources-section reveal" id="fontes">
+  <div class="container">
+    <div class="sources-header">
+      <div>
+        <div class="sources-kicker">FONTES DE DADOS &amp; AUDITORIA</div>
+        <h2 style="margin:4px 0 0; font-size:1.15rem; font-weight:700;">Cotações e resultados validados em fontes públicas</h2>
+      </div>
+      <span class="badge badge-buy">100% AUDITADO</span>
+    </div>
+
+    <div class="sources-grid">
+      <div class="source-card">
+        <div class="source-icon">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        </div>
+        <div>
+          <div class="source-name">Binance Spot API <span class="badge badge-cat">CRIPTO</span></div>
+          <div class="source-desc">Preços e candles 1h em tempo real para BTC, ETH, SOL e BNB.</div>
+        </div>
+      </div>
+
+      <div class="source-card">
+        <div class="source-icon">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        </div>
+        <div>
+          <div class="source-name">Yahoo Finance <span class="badge badge-cat">B3 • US • FUT</span></div>
+          <div class="source-desc">Cotações para Ações, Fundos, Índices e Futuros.</div>
+        </div>
+      </div>
+
+      <div class="source-card">
+        <div class="source-icon">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </div>
+        <div>
+          <div class="source-name">Stooq Market Feed <span class="badge badge-cat">FOREX</span></div>
+          <div class="source-desc">Feed institucional para EUR/USD, GBP/USD e USD/JPY.</div>
+        </div>
+      </div>
+
+      <div class="source-card">
+        <div class="source-icon">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div>
+          <div class="source-name">Ledger SQLite <span class="badge badge-cat">AUDIT</span></div>
+          <div class="source-desc">Registro imutável de entrada, TP1, TP2 e Stop Loss.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FxPro-style Interactive Market Strip with XM Continuous Marquee -->
+<section class="market-strip-section" id="mercados">
+  <div class="container">
+    <div class="filter-bar">
+      
+        <a href="./index.html?categoria=Todos#mercados" class="pill active">Todos</a>
+      
+        <a href="./index.html?categoria=A%C3%A7%C3%B5es#mercados" class="pill ">Ações</a>
+      
+        <a href="./index.html?categoria=ETFs#mercados" class="pill ">ETFs</a>
+      
+        <a href="./index.html?categoria=Fundos#mercados" class="pill ">Fundos</a>
+      
+        <a href="./index.html?categoria=Futuros#mercados" class="pill ">Futuros</a>
+      
+        <a href="./index.html?categoria=Forex#mercados" class="pill ">Forex</a>
+      
+        <a href="./index.html?categoria=Cripto#mercados" class="pill ">Cripto</a>
+      
+        <a href="./index.html?categoria=%C3%8Dndices#mercados" class="pill ">Índices</a>
+      
+    </div>
+
+    <div class="xm-marquee">
+      <div class="xm-marquee-track">
+        
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">BTC/USD <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">Cripto • 91.500,00</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=Cripto#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">ETH/USD <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">Cripto • 3.120,00</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=Cripto#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">EUR/USD <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">Forex • 1,0580</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=Forex#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">GBP/USD <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">Forex • 1,2670</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=Forex#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">ES=F <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">Futuros • 5.920,00</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=Futuros#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">NQ=F <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">Futuros • 20.750,00</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=Futuros#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">SPX500 <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">Índices • 5.910,00</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=%C3%8Dndices#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">NDX100 <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">Índices • 20.680,00</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=%C3%8Dndices#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">PETR4 <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">Ações • 36,40</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=A%C3%A7%C3%B5es#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">VALE3 <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">Ações • 58,20</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=A%C3%A7%C3%B5es#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">IVVB11 <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">ETFs • 352,00</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=ETFs#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">NASD11 <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">ETFs • 17,50</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=ETFs#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">HGLG11 <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">Fundos • 156,80</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=Fundos#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">MXRF11 <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">Fundos • 9,85</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=Fundos#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+        
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">BTC/USD <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">Cripto • 91.500,00</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=Cripto#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">ETH/USD <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">Cripto • 3.120,00</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=Cripto#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">EUR/USD <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">Forex • 1,0580</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=Forex#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">GBP/USD <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">Forex • 1,2670</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=Forex#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">ES=F <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">Futuros • 5.920,00</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=Futuros#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">NQ=F <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">Futuros • 20.750,00</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=Futuros#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">SPX500 <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">Índices • 5.910,00</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=%C3%8Dndices#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">NDX100 <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">Índices • 20.680,00</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=%C3%8Dndices#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">PETR4 <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">Ações • 36,40</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=A%C3%A7%C3%B5es#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">VALE3 <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">Ações • 58,20</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=A%C3%A7%C3%B5es#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">IVVB11 <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">ETFs • 352,00</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=ETFs#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">NASD11 <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">ETFs • 17,50</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=ETFs#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">HGLG11 <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">Fundos • 156,80</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=Fundos#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+            
+              <div class="inst-card">
+                <div class="inst-left">
+                  <div class="inst-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div>
+                    <div class="inst-sym">MXRF11 <span class="badge badge-warn" style="font-size:0.6rem; padding:1px 5px; vertical-align:middle;">SIMULADO</span></div>
+                    <div class="inst-px">Fundos • 9,85</div>
+                  </div>
+                </div>
+                <a href="./index.html?categoria=Fundos#operacoes" class="inst-btn">Ver Sinais</a>
+              </div>
+            
+          
+        
+      </div>
+    </div>
+  </div>
+</section>
+  </details>
+</div>
+
+<!-- Sinais em Aberto -->
+<section class="container section-wrap reveal" id="operacoes">
+  <div class="section-head">
+    <div>
+      <h2>Mesa de Operações — Em Aberto</h2>
+      <span class="section-sub">0 sinais vitrine gratuitos • 1 sinais exclusivos VIP</span>
+    </div>
+  </div>
+
+  
+    <div class="signals-grid">
+      
+
+      
+        
+        
+        
+        <article class="signal-card">
+          <div class="vip-blur-content">
+            <div class="signal-top">
+              <span class="badge badge-cat">CRIPTO</span>
+              <div style="display:flex; gap:6px;">
+                
+                <span class="badge badge-vip">VIP</span>
+              </div>
+            </div>
+            <h3 class="asset-title">ATIVO VIP</h3>
+            <div class="levels-grid">
+              <div class="level-box"><span>Entrada</span>•••,••</div>
+              <div class="level-box"><span>Stop Loss</span>•••,••</div>
+              <div class="level-box"><span>Alvo 1 (TP1)</span>•••,••</div>
+              <div class="level-box"><span>Alvo 2 (TP2)</span>•••,••</div>
+            </div>
+          </div>
+          
+            <div class="vip-lock-overlay">
+              <div class="lock-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </div>
+              <span class="badge badge-vip">SINAL VIP (CRIPTO)</span>
+              <p>Operação ativa em monitoramento</p>
+              <a href="#planos" class="btn btn-sm btn-electric">Desbloquear VIP</a>
+            </div>
+          
+        </article>
+      
+    </div>
+  
+</section>
+
+<!-- Histórico Auditado (Recolhido estilo XM para manter a Home limpa) -->
+<section class="container section-wrap reveal" style="padding-top:0;" id="historico">
+  <details style="padding:14px 18px;">
+    <summary style="cursor:pointer; font-weight:700; font-size:0.95rem; display:flex; justify-content:space-between; align-items:center;">
+      <span>📜 Ver tabela completa do histórico auditado de sinais encerrados (3)</span>
+      <span class="badge badge-cat">Mostrar mais</span>
+    </summary>
+    <div style="margin-top:16px;">
+  <div class="filter-toolbar">
+    <div>
+      <h2 style="margin:0; font-size:1.4rem; font-weight:800; letter-spacing:-0.02em;">Livro Razão — Histórico Auditado</h2>
+      <span class="section-sub">Todos os acertos e stops registrados automaticamente</span>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+      <input type="search" id="homeHistSearch" class="search-input" placeholder="Buscar ativo no histórico..." />
+      <div class="seg-group" id="homeHistFilter">
+        <button type="button" class="seg-btn btn-xs active" data-out="ALL">Todos</button>
+        <button type="button" class="seg-btn btn-xs" data-out="GAIN">Gain</button>
+        <button type="button" class="seg-btn btn-xs" data-out="LOSS">Stop Loss</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Categoria</th>
+          <th>Ativo</th>
+          <th>Direção</th>
+          <th>Entrada</th>
+          <th>Fechamento</th>
+          <th>Status Auditado</th>
+          <th>Variação</th>
+          <th>Encerrado em</th>
+        </tr>
+      </thead>
+      <tbody id="homeHistTbody">
+        
+          
+          <tr class="home-hist-row" data-ativo="SPX500" data-out="LOSS">
+            <td class="mono" style="color:var(--muted);">#7</td>
+            <td><span class="badge badge-cat">Índices</span></td>
+            <td class="mono"><strong>SPX500</strong></td>
+            <td><span class="badge badge-sell">VENDA</span></td>
+            <td class="mono">5.940,00</td>
+            <td class="mono">5.980,00</td>
+            <td>
+              
+                <span class="badge badge-loss">STOP LOSS</span>
+              
+            </td>
+            <td class="mono text-red">
+              -0,64%
+            </td>
+            <td class="mono" style="color:var(--muted); font-size:0.78rem;">27/11/2026 02:53</td>
+          </tr>
+        
+          
+          <tr class="home-hist-row" data-ativo="EUR/USD" data-out="GAIN">
+            <td class="mono" style="color:var(--muted);">#6</td>
+            <td><span class="badge badge-cat">Forex</span></td>
+            <td class="mono"><strong>EUR/USD</strong></td>
+            <td><span class="badge badge-buy">COMPRA</span></td>
+            <td class="mono">1,0520</td>
+            <td class="mono">1,0620</td>
+            <td>
+              
+                <span class="badge badge-win">GAIN TP1</span>
+              
+            </td>
+            <td class="mono text-green">
+              +0,90%
+            </td>
+            <td class="mono" style="color:var(--muted); font-size:0.78rem;">27/11/2026 00:53</td>
+          </tr>
+        
+          
+          <tr class="home-hist-row" data-ativo="BTC/USD" data-out="GAIN">
+            <td class="mono" style="color:var(--muted);">#5</td>
+            <td><span class="badge badge-cat">Cripto</span></td>
+            <td class="mono"><strong>BTC/USD</strong></td>
+            <td><span class="badge badge-buy">COMPRA</span></td>
+            <td class="mono">88.500,00</td>
+            <td class="mono">92.950,00</td>
+            <td>
+              
+                <span class="badge badge-win">GAIN TP2</span>
+              
+            </td>
+            <td class="mono text-green">
+              +4,86%
+            </td>
+            <td class="mono" style="color:var(--muted); font-size:0.78rem;">26/11/2026 13:53</td>
+          </tr>
+        
+      </tbody>
+    </table>
+  </div>
+    </div>
+  </details>
+</section>
+
+<!-- Planos VIP -->
+<section class="container section-wrap reveal" style="padding-top:0;" id="planos">
+  <div class="section-head">
+    <div>
+      <h2>Acesso ao Terminal VIP &amp; Telegram</h2>
+      <span class="section-sub">Pagamento exclusivo via transferência Pix • Sem cobrança automática no cartão</span>
+    </div>
+    <a href="https://wa.me/5511983715318" target="_blank" rel="noopener" class="btn btn-sm btn-outline">Falar com Atendimento</a>
+  </div>
+
+  <div class="pricing-grid">
+    
+      <div class="plan-card featured">
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h3 style="margin:0; font-size:1.1rem;">Mensal</h3>
+            <span class="badge badge-buy">PIX • ACESSO IMEDIATO</span>
+          </div>
+          <div class="plan-price">R$ 29,99<span>/mês</span></div>
+          <ul class="plan-list">
+            
+              <li>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Pagamento único via transferência Pix</span>
+              </li>
+            
+              <li>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Acesso total ao Painel Web VIP</span>
+              </li>
+            
+              <li>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Convite exclusivo no Canal VIP do Telegram</span>
+              </li>
+            
+              <li>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Sinais em tempo real (6 categorias)</span>
+              </li>
+            
+          </ul>
+        </div>
+        <button type="button"
+                class="btn btn-electric open-pix-btn"
+                data-plan="Mensal"
+                data-price="R$ 29,99/mês">
+          Pagar via Pix
+        </button>
+      </div>
+    
+      <div class="plan-card ">
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h3 style="margin:0; font-size:1.1rem;">Trimestral</h3>
+            <span class="badge badge-buy">ECONOMIA NO PIX</span>
+          </div>
+          <div class="plan-price">R$ 79,90<span>/trimestre</span></div>
+          <ul class="plan-list">
+            
+              <li>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Equivalente a R$ 26,63/mês no Pix</span>
+              </li>
+            
+              <li>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Acesso total ao Painel Web VIP + Telegram</span>
+              </li>
+            
+              <li>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Auditoria automática TP1, TP2 e Stop</span>
+              </li>
+            
+              <li>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Sem renovação automática no cartão</span>
+              </li>
+            
+          </ul>
+        </div>
+        <button type="button"
+                class="btn btn-outline open-pix-btn"
+                data-plan="Trimestral"
+                data-price="R$ 79,90/trimestre">
+          Pagar via Pix
+        </button>
+      </div>
+    
+      <div class="plan-card ">
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h3 style="margin:0; font-size:1.1rem;">Anual</h3>
+            <span class="badge badge-buy">25% OFF + CARTEIRAS</span>
+          </div>
+          <div class="plan-price">R$ 269,90<span>/ano</span></div>
+          <ul class="plan-list">
+            
+              <li>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Carteiras Gerenciadas (2, 5 e 10+ anos) — 01/12/2026</span>
+              </li>
+            
+              <li>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Canal VIP Telegram + Painel Web 24/7</span>
+              </li>
+            
+              <li>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Perfis Conservador, Moderado e Agressivo</span>
+              </li>
+            
+              <li>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Prioridade no suporte e atualizações do robô</span>
+              </li>
+            
+          </ul>
+        </div>
+        <button type="button"
+                class="btn btn-outline open-pix-btn"
+                data-plan="Anual"
+                data-price="R$ 269,90/ano">
+          Pagar via Pix
+        </button>
+      </div>
+    
+  </div>
+</section>
+
+<!-- Modal de Transferência Pix -->
+<div id="pixModal" class="pix-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="pixModalTitle">
+  <div class="pix-modal">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <span class="badge badge-buy">PAGAMENTO EXCLUSIVO PIX</span>
+      <button type="button" id="closePixModal" class="btn btn-sm btn-outline" aria-label="Fechar">✕</button>
+    </div>
+    <h3 id="pixModalTitle" style="margin:0 0 6px; font-size:1.25rem;">Assinar Plano <span id="pixPlanName">Mensal</span></h3>
+    <p style="margin:0 0 14px; color:var(--muted); font-size:0.88rem;">
+      Valor da transferência: <strong id="pixPlanPrice" class="mono text-green">R$ 29,99/mês</strong>
+    </p>
+
+    <div style="font-size:0.8rem; color:var(--text-soft);">
+      <div><strong>Favorecido:</strong> Heurístika Mesa Quantitativa</div>
+      <div><strong>Modalidade:</strong> Transferência Pix Instantânea (Celular)</div>
+    </div>
+
+    <div class="pix-key-box">
+      <code id="pixKeyValue" class="mono" style="font-size:0.9rem; color:#34d399; word-break:break-all;">11983715318</code>
+      <button type="button" id="copyPixBtn" class="btn btn-sm btn-electric" data-copy-label="Copiar Chave" data-copied-label="Copiado!">Copiar Chave</button>
+    </div>
+
+    <p style="margin:0 0 16px; font-size:0.8rem; color:var(--muted);">
+      Após realizar o Pix, envie o comprovante para receber seu código de acesso VIP e o link único do Telegram.
+    </p>
+
+    <a href="https://wa.me/5511983715318" target="_blank" rel="noopener" class="btn btn-electric" style="width:100%;">
+      Enviar Comprovante e Liberar Acesso
+    </a>
+  </div>
+</div>
+
+<div class="container">
+  <section class="disclaimer">
+    <strong>Aviso Legal de Risco:</strong> As informações, análises e sinais publicados neste terminal têm caráter estritamente educacional e informativo, não constituindo recomendação personalizada de investimento. Operações em renda variável, criptoativos, forex, derivativos e futuros envolvem risco significativo de perda financeira. Resultados passados não garantem retornos futuros.
+  </section>
+</div>
+
+<script>
+  (function renderEquityChart() {
+    const box = document.getElementById("equityChartBox");
+    const svg = document.getElementById("equitySvg");
+    if (!box || !svg) return;
+    let pts = [];
+    try { pts = JSON.parse(box.dataset.points || "[0]"); } catch (e) { pts = [0]; }
+    if (pts.length < 2) pts = [0, 0];
+
+    const w = 400, h = 120, pad = 10;
+    const minVal = Math.min(...pts);
+    const maxVal = Math.max(...pts);
+    const span = (maxVal - minVal) || 1;
+    const coords = pts.map((v, idx) => {
+      const x = pad + (idx / (pts.length - 1)) * (w - pad * 2);
+      const y = h - pad - ((v - minVal) / span) * (h - pad * 2);
+      return [x, y];
+    });
+    const linePath = coords.map((p, i) => `${i === 0 ? "M" : "L"}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" ");
+    const areaPath = `${linePath} L${coords[coords.length - 1][0].toFixed(1)},${h - pad} L${coords[0][0].toFixed(1)},${h - pad} Z`;
+    const isPositive = pts[pts.length - 1] >= 0;
+    const stroke = isPositive ? "#10b981" : "#ff4757";
+    const fill = isPositive ? "rgba(16, 185, 129, 0.16)" : "rgba(255, 71, 87, 0.14)";
+    svg.innerHTML = `
+      <path d="${areaPath}" fill="${fill}" />
+      <path d="${linePath}" class="equity-line-anim" fill="none" stroke="${stroke}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      <circle cx="${coords[coords.length - 1][0]}" cy="${coords[coords.length - 1][1]}" r="4" fill="${stroke}" />
+    `;
+  })();
+
+  // Cinematic 3D Bullish Candlestick Motion (vídeo procedural 60fps de alta contínua)
+  (function initHeroCanvas() {
+    const canvas = document.getElementById("heroCanvas");
+    if (!canvas || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const ctx = canvas.getContext("2d");
+    let w = 0, h = 0;
+
+    const candleSpacing = 34;
+    const candleWidth = 17;
+    let candles = [];
+    let scrollOffset = 0;
+    let lastClose = 0.78;
+    let pulsePhase = 0;
+    const embers = [];
+
+    function nextCandle(prevClose) {
+      const isPullback = Math.random() < 0.22;
+      const delta = isPullback
+        ? -(0.018 + Math.random() * 0.032)
+        : (0.028 + Math.random() * 0.055);
+      const open = prevClose;
+      let close = open - delta; // Y menor = preço mais alto na tela
+      if (close < 0.14) close = 0.74;
+      const high = Math.min(open, close) - (0.018 + Math.random() * 0.042);
+      const low = Math.max(open, close) + (0.015 + Math.random() * 0.032);
+      const volume = 0.12 + Math.random() * 0.22;
+      return { open, close, high, low, volume, bull: close <= open };
+    }
+
+    function seedCandles() {
+      const count = Math.ceil((w || 1400) / candleSpacing) + 6;
+      candles = [];
+      let c = 0.80;
+      for (let i = 0; i < count; i++) {
+        const item = nextCandle(c);
+        c = item.close;
+        candles.push(item);
+      }
+      lastClose = c;
+    }
+
+    function resize() {
+      w = canvas.width = canvas.offsetWidth;
+      h = canvas.height = canvas.offsetHeight;
+      if (candles.length === 0) seedCandles();
+    }
+    window.addEventListener("resize", resize);
+    resize();
+
+    function frame() {
+      ctx.clearRect(0, 0, w, h);
+      pulsePhase += 0.08;
+
+      // Grade institucional
+      ctx.strokeStyle = "rgba(52, 211, 153, 0.055)";
+      ctx.lineWidth = 1;
+      for (let y = 48; y < h; y += 64) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+      }
+      for (let x = 60; x < w; x += 96) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, h);
+        ctx.stroke();
+      }
+
+      // Fluxo contínuo e visível dos candles em alta
+      scrollOffset += 1.45;
+      if (scrollOffset >= candleSpacing) {
+        scrollOffset -= candleSpacing;
+        candles.shift();
+        const nc = nextCandle(lastClose);
+        lastClose = nc.close;
+        candles.push(nc);
+        if (nc.bull) {
+          for (let k = 0; k < 3; k++) {
+            embers.push({
+              x: w - 40 + (Math.random() - 0.5) * 30,
+              y: nc.close * h,
+              vy: -0.7 - Math.random() * 0.9,
+              vx: -1.1 - Math.random() * 0.4,
+              life: 1,
+              r: 1.8 + Math.random() * 2.2
+            });
+          }
+        }
+      }
+
+      // Histograma de Volume brilhante na base
+      candles.forEach((c, idx) => {
+        const x = idx * candleSpacing - scrollOffset;
+        const vh = c.volume * h * 0.55;
+        ctx.fillStyle = c.bull ? "rgba(16, 185, 129, 0.24)" : "rgba(255, 71, 87, 0.14)";
+        ctx.fillRect(x + 2, h - vh, candleWidth - 4, vh);
+      });
+
+      // EMA rápida luminosa + área de brilho sob a tendência
+      ctx.save();
+      ctx.shadowColor = "rgba(52, 211, 153, 0.85)";
+      ctx.shadowBlur = 18;
+      ctx.beginPath();
+      candles.forEach((c, idx) => {
+        const x = idx * candleSpacing - scrollOffset + candleWidth * 0.5;
+        const y = ((c.open + c.close) * 0.5) * h;
+        if (idx === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.strokeStyle = "rgba(52, 211, 153, 0.78)";
+      ctx.lineWidth = 2.6;
+      ctx.stroke();
+      ctx.restore();
+
+      // Candles OHLC 3D-lit com destaque no candle ativo da ponta direita
+      candles.forEach((c, idx) => {
+        const x = idx * candleSpacing - scrollOffset;
+        const isLiveTip = idx === candles.length - 2;
+        const liveBoost = isLiveTip ? Math.sin(pulsePhase) * 8 : 0;
+
+        const yOpen = c.open * h;
+        const yClose = c.close * h - liveBoost;
+        const yHigh = Math.min(c.high * h, yClose - 6);
+        const yLow = c.low * h;
+        const bodyTop = Math.min(yOpen, yClose);
+        const bodyH = Math.max(8, Math.abs(yClose - yOpen));
+
+        ctx.save();
+        if (c.bull) {
+          ctx.shadowColor = "rgba(16, 185, 129, 0.85)";
+          ctx.shadowBlur = isLiveTip ? 26 : 16;
+        }
+
+        // Pavio luminoso
+        ctx.beginPath();
+        ctx.moveTo(x + candleWidth / 2, yHigh);
+        ctx.lineTo(x + candleWidth / 2, yLow);
+        ctx.strokeStyle = c.bull ? "rgba(110, 231, 183, 0.92)" : "rgba(255, 71, 87, 0.55)";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Corpo com gradiente esmeralda nobre + reflexo superior
+        const grad = ctx.createLinearGradient(x, bodyTop, x, bodyTop + bodyH);
+        if (c.bull) {
+          grad.addColorStop(0, "rgba(110, 231, 183, 0.98)");
+          grad.addColorStop(0.35, "rgba(16, 185, 129, 0.90)");
+          grad.addColorStop(1, "rgba(5, 150, 105, 0.62)");
+        } else {
+          grad.addColorStop(0, "rgba(255, 71, 87, 0.65)");
+          grad.addColorStop(1, "rgba(159, 18, 57, 0.38)");
+        }
+        ctx.fillStyle = grad;
+        ctx.fillRect(x, bodyTop, candleWidth, bodyH);
+
+        // Borda especular no topo do candle comprador
+        if (c.bull) {
+          ctx.fillStyle = "rgba(236, 253, 245, 0.85)";
+          ctx.fillRect(x, bodyTop, candleWidth, 2);
+        }
+
+        // Linha horizontal tracejada de preço ao vivo no candle da ponta
+        if (isLiveTip) {
+          ctx.setLineDash([5, 5]);
+          ctx.beginPath();
+          ctx.moveTo(0, yClose);
+          ctx.lineTo(w, yClose);
+          ctx.strokeStyle = "rgba(52, 211, 153, 0.45)";
+          ctx.lineWidth = 1.2;
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+        ctx.restore();
+      });
+
+      // Partículas ascendentes luminosas
+      for (let i = embers.length - 1; i >= 0; i--) {
+        const em = embers[i];
+        em.x += em.vx;
+        em.y += em.vy;
+        em.life -= 0.014;
+        if (em.life <= 0) { embers.splice(i, 1); continue; }
+        ctx.beginPath();
+        ctx.arc(em.x, em.y, em.r * em.life, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(110, 231, 183, ${em.life * 0.85})`;
+        ctx.fill();
+      }
+
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  })();
+
+  // Scroll-triggered reveal + Number Count-Up (XM-style)
+  (function initMotionObservers() {
+    const reveals = document.querySelectorAll(".reveal");
+    const counters = document.querySelectorAll(".count-up");
+
+    if (!("IntersectionObserver" in window)) {
+      reveals.forEach(el => el.classList.add("is-visible"));
+      return;
+    }
+
+    const revObs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          revObs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => revObs.observe(el));
+
+    const cntObs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        const target = parseFloat(el.dataset.target || "0");
+        const decimals = parseInt(el.dataset.decimals || "0", 10);
+        const suffix = el.dataset.suffix || "";
+        const duration = 900;
+        const start = performance.now();
+        function tick(now) {
+          const p = Math.min(1, (now - start) / duration);
+          const eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = (target * eased).toFixed(decimals) + suffix;
+          if (p < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+        cntObs.unobserve(el);
+      });
+    }, { threshold: 0.4 });
+    counters.forEach(el => cntObs.observe(el));
+
+    // XM Vertical Digit-Strip Odometer (6000 / (1 + 0.3 * i) ms)
+    const odos = document.querySelectorAll(".odometer");
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const odoObs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target;
+          const raw = (el.dataset.odo || el.textContent || "").trim();
+          el.innerHTML = "";
+          const strips = [];
+          let digitIdx = 0;
+          for (const ch of raw) {
+            if (/[0-9]/.test(ch)) {
+              const con = document.createElement("span");
+              con.className = "digit-con";
+              const strip = document.createElement("span");
+              strip.className = "digit-strip";
+              const dur = Math.round(3200 / (1 + 0.3 * digitIdx));
+              strip.style.transition = `top ${dur}ms cubic-bezier(0.22, 1, 0.36, 1)`;
+              strip.innerHTML = "0123456789".split("").map(n => `<span>${n}</span>`).join("");
+              con.appendChild(strip);
+              el.appendChild(con);
+              strips.push({ strip, val: parseInt(ch, 10) });
+              digitIdx++;
+            } else {
+              const lit = document.createElement("span");
+              lit.textContent = ch;
+              el.appendChild(lit);
+            }
+          }
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              strips.forEach(({ strip, val }) => {
+                strip.style.top = `-${val * 2.2}rem`;
+              });
+            });
+          });
+          odoObs.unobserve(el);
+        });
+      }, { threshold: 0.4 });
+      odos.forEach(el => odoObs.observe(el));
+    }
+  })();
+
+  // Modal Pix (cópia de chave em 1 clique)
+  (function initPixModal() {
+    const modal = document.getElementById("pixModal");
+    if (!modal) return;
+    const planNameEl = document.getElementById("pixPlanName");
+    const planPriceEl = document.getElementById("pixPlanPrice");
+    const closeBtn = document.getElementById("closePixModal");
+    const copyBtn = document.getElementById("copyPixBtn");
+    const pixKeyEl = document.getElementById("pixKeyValue");
+
+    document.querySelectorAll(".open-pix-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        planNameEl.textContent = btn.dataset.plan || "Mensal";
+        planPriceEl.textContent = btn.dataset.price || "R$ 29,99/mês";
+        modal.classList.add("open");
+      });
+    });
+
+    closeBtn.addEventListener("click", () => modal.classList.remove("open"));
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) modal.classList.remove("open");
+    });
+
+    copyBtn.addEventListener("click", async () => {
+      const key = (pixKeyEl.textContent || "").trim();
+      const origLabel = copyBtn.dataset.copyLabel || "Copiar Chave";
+      const copiedLabel = copyBtn.dataset.copiedLabel || "Copiado!";
+      const ok = await window.hkCopyText(key, copiedLabel);
+      if (ok) {
+        copyBtn.textContent = copiedLabel;
+        setTimeout(() => { copyBtn.textContent = origLabel; }, 1800);
+      } else {
+        copyBtn.textContent = key;
+      }
+    });
+  })();
+
+  // Cópia de sinal vitrine + filtro instantâneo do livro razão
+  (function initHomeSignalsTerminal() {
+    document.querySelectorAll(".home-copy-sig-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        window.hkCopyText(btn.dataset.copy, "Sinal copiado para a área de transferência!");
+      });
+    });
+
+    const searchInp = document.getElementById("homeHistSearch");
+    const filterBtns = document.querySelectorAll("#homeHistFilter .seg-btn");
+    let activeOut = "ALL";
+
+    function applyHomeHist() {
+      const q = (searchInp ? searchInp.value : "").trim().toUpperCase();
+      document.querySelectorAll(".home-hist-row").forEach(row => {
+        const matchQ = !q || row.dataset.ativo.includes(q);
+        const matchOut = activeOut === "ALL" || row.dataset.out === activeOut;
+        row.style.display = (matchQ && matchOut) ? "" : "none";
+      });
+    }
+
+    if (searchInp) searchInp.addEventListener("input", applyHomeHist);
+    filterBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        activeOut = btn.dataset.out;
+        filterBtns.forEach(b => b.classList.toggle("active", b === btn));
+        applyHomeHist();
+      });
+    });
+  })();
+</script>
+
+  </main>
+
+  <footer class="site-footer no-print">
+    <div class="container footer-inner" style="flex-wrap:wrap; gap:12px;">
+      <span>Heurístika • Heurística Financeira &amp; Auditoria Quantitativa</span>
+      <div style="display:flex; gap:14px; align-items:center; font-size:0.78rem;">
+        <a href="./admin/" style="color:var(--muted);">Painel Admin</a>
+        <a href="#pt" data-static-lang="pt" style="color:var(--muted);">PT</a>
+        <a href="#en" data-static-lang="en" style="color:var(--muted);">EN</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.hkToast = function(message, type = "success") {
+      const container = document.getElementById("hkToastContainer");
+      if (!container) return;
+      const el = document.createElement("div");
+      el.className = `hk-toast hk-toast-${type}`;
+      el.innerHTML = `<span class="hk-toast-dot"></span><span></span>`;
+      el.querySelector("span:last-child").textContent = message;
+      container.appendChild(el);
+      requestAnimationFrame(() => el.classList.add("show"));
+      setTimeout(() => {
+        el.classList.remove("show");
+        setTimeout(() => el.remove(), 240);
+      }, 2800);
+    };
+
+    window.hkCopyText = async function(text, okMsg = "Copiado para a área de transferência!") {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          ta.style.position = "fixed";
+          ta.style.opacity = "0";
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand("copy");
+          ta.remove();
+        }
+        window.hkToast(okMsg, "success");
+        return true;
+      } catch (e) {
+        window.hkToast("Não foi possível copiar automaticamente.", "warning");
+        return false;
+      }
+    };
+
+    document.addEventListener("click", (e) => {
+      const waBtn = e.target.closest(".hk-share-wa");
+      if (waBtn) {
+        const txt = waBtn.getAttribute("data-share") || "";
+        window.open("https://wa.me/?text=" + encodeURIComponent(txt), "_blank", "noopener");
+        return;
+      }
+      const tgBtn = e.target.closest(".hk-share-tg");
+      if (tgBtn) {
+        const txt = tgBtn.getAttribute("data-share") || "";
+        window.open("https://t.me/share/url?url=" + encodeURIComponent(window.location.href) + "&text=" + encodeURIComponent(txt), "_blank", "noopener");
+      }
+    });
+
+    (function initSubtleCardGlow() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const spotlight = document.getElementById("cursorSpotlight");
+      window.addEventListener("mousemove", (e) => {
+        const mx = e.clientX;
+        const my = e.clientY;
+        if (spotlight) {
+          spotlight.style.setProperty("--mx", mx + "px");
+          spotlight.style.setProperty("--my", my + "px");
+        }
+        const card = e.target.closest(".source-card, .signal-card, .plan-card, .inst-card, .terminal-window, .term-panel");
+        if (card) {
+          const rect = card.getBoundingClientRect();
+          card.style.setProperty("--cx", (mx - rect.left) + "px");
+          card.style.setProperty("--cy", (my - rect.top) + "px");
+        }
+      }, { passive: true });
+    })();
+  </script>
+
+<script id="hkStaticPagesRuntime">
+(function() {
+  window.HK_STATIC_PAGES = true;
+  const PREFIX = ".";
+  const PAGE_KIND = "home";
+  const VIP_KEY = "hk_static_vip_v1";
+  const ADMIN_KEY = "hk_static_admin_v1";
+  const STUDENT_KEY = "hk_static_student_v1";
+  const CERTS_KEY = "hk_static_certs_v1";
+  const QUESTIONS = [];
+
+  function getVipSession() {
+    try { return JSON.parse(localStorage.getItem(VIP_KEY) || "null"); }
+    catch (e) { return null; }
+  }
+
+  // Sincroniza botões de topo (Entrar vs Terminal VIP / Sair) e logout VIP
+  const vipSess = getVipSession();
+  document.querySelectorAll('[data-static-vip-logout="1"], a[href$="/logout"]').forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      try { localStorage.removeItem(VIP_KEY); } catch (err) {}
+      window.location.href = PREFIX + "/index.html";
+    });
+  });
+
+  if (vipSess) {
+    document.querySelectorAll('.nav-cta a[href$="/login/"]').forEach(a => {
+      a.textContent = "Terminal VIP";
+      a.setAttribute("href", PREFIX + "/vip/");
+      a.classList.remove("btn-outline");
+      a.classList.add("btn-electric");
+    });
+    if (PAGE_KIND === "home") {
+      document.querySelectorAll(".vip-lock-overlay").forEach(ov => {
+        const p = ov.querySelector("p");
+        if (p) p.textContent = "Seu acesso VIP está ativo! Abra o Terminal VIP para ver os parâmetros completos e o botão de compartilhar.";
+        const a = ov.querySelector("a.btn");
+        if (a) {
+          a.textContent = "Ver Sinal Liberado no Terminal VIP →";
+          a.setAttribute("href", PREFIX + "/vip/");
+        }
+      });
+      const heroCta = document.querySelector('.hero-buttons a[href="#planos"]');
+      if (heroCta) {
+        heroCta.textContent = "Abrir Terminal VIP (Sinais em Aberto) →";
+        heroCta.setAttribute("href", PREFIX + "/vip/");
+      }
+    }
+  }
+
+  // Se estiver na página demo de carteiras mas já logado como VIP/Anual, abre a versão desbloqueada
+  if (PAGE_KIND === "carteiras_demo" && vipSess) {
+    window.location.replace(PREFIX + "/carteiras/anual.html");
+    return;
+  }
+
+  // Página de Login VIP (/login/)
+  if (PAGE_KIND === "login") {
+    document.querySelectorAll('form[action$="/login"], form').forEach(form => {
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const input = form.querySelector('[name="identificador"]');
+        const raw = (input ? input.value : "").trim();
+        if (!raw || raw.length < 3) {
+          if (window.hkToast) window.hkToast("Informe seu e-mail ou código de acesso VIP.", "warning");
+          return;
+        }
+        const upper = raw.toUpperCase();
+        const validCodes = ["VIP-VITALICIO", "VITALICIO", "VIP-DEMO-2026", "ANUAL-2026", "ADMIN123", "VIP-2026", "HEURISTIKA-VIP", "LSSCHNEIDER24"];
+        const isEmail = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(raw);
+        if (!isEmail && !validCodes.includes(upper) && !upper.startsWith("VIP-")) {
+          if (window.hkToast) window.hkToast("Código inválido. Use seu código Vitalício (VIP-VITALICIO) ou e-mail cadastrado.", "warning");
+          return;
+        }
+        const subObj = {
+          nome: isEmail ? raw.split("@")[0] : "Acesso Master Vitalício",
+          contato: raw,
+          plano: "Vitalício",
+          codigo_acesso: isEmail ? "VIP-VITALICIO" : upper,
+        };
+        try { localStorage.setItem(VIP_KEY, JSON.stringify(subObj)); } catch (err) {}
+        const params = new URLSearchParams(window.location.search);
+        const next = params.get("next") || "";
+        if (next === "carteiras") {
+          window.location.href = PREFIX + "/carteiras/anual.html";
+        } else {
+          window.location.href = PREFIX + "/vip/";
+        }
+      });
+    });
+  }
+
+  // Página do Painel Admin (/admin/)
+  if (PAGE_KIND === "admin") {
+    const gate = document.getElementById("staticAdminGate");
+    const content = document.getElementById("staticAdminContent");
+    const form = document.getElementById("staticAdminLoginForm");
+    function checkAdminAuth() {
+      const ok = sessionStorage.getItem(ADMIN_KEY) === "1";
+      if (gate) gate.style.display = ok ? "none" : "block";
+      if (content) content.style.display = ok ? "block" : "none";
+    }
+    form?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const pwd = (document.getElementById("staticAdminPwd")?.value || "").trim();
+      if (pwd === "admin123") {
+        sessionStorage.setItem(ADMIN_KEY, "1");
+        checkAdminAuth();
+        if (window.hkToast) window.hkToast("Painel Administrativo desbloqueado!", "success");
+      } else {
+        if (window.hkToast) window.hkToast("Senha administrativa incorreta.", "warning");
+      }
+    });
+    document.querySelectorAll('form[action$="/admin/logout"]').forEach(f => {
+      f.addEventListener("submit", (e) => {
+        e.preventDefault();
+        sessionStorage.removeItem(ADMIN_KEY);
+        window.location.href = PREFIX + "/index.html";
+      });
+    });
+    checkAdminAuth();
+  }
+
+  // Filtro client-side de categorias na Vitrine e no Terminal VIP
+  document.querySelectorAll('a[href*="?categoria="]').forEach(link => {
+    link.addEventListener("click", (e) => {
+      const href = link.getAttribute("href") || "";
+      const m = href.match(/categoria=([^&#]+)/);
+      if (!m) return;
+      e.preventDefault();
+      const cat = decodeURIComponent(m[1].replace(/\+/g, " "));
+      document.querySelectorAll('a[href*="?categoria="]').forEach(a => {
+        a.classList.toggle("active", a === link);
+      });
+      document.querySelectorAll(".signal-card").forEach(card => {
+        const cardCat = (card.dataset.cat || card.querySelector(".badge-cat")?.textContent || "").trim();
+        if (!cardCat || card.classList.contains("module-card-item")) return;
+        card.style.display = (cat === "Todos" || cardCat.toUpperCase() === cat.toUpperCase()) ? "" : "none";
+      });
+      document.querySelectorAll("#histTable tbody tr, #vipHistTable tbody tr").forEach(row => {
+        const firstTd = row.querySelector("td");
+        const rowCat = firstTd ? firstTd.textContent.trim() : "";
+        row.style.display = (cat === "Todos" || !rowCat || rowCat.toUpperCase() === cat.toUpperCase()) ? "" : "none";
+      });
+    });
+  });
+
+  if (PAGE_KIND !== "academia") return;
+
+  function esc(s) {
+    return String(s || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function maskId(doc, email) {
+    const d = String(doc || "").trim();
+    if (d) {
+      const digits = d.replace(/\D/g, "");
+      if (digits.length === 11) return `***.${digits.slice(3, 6)}.${digits.slice(6, 9)}-**`;
+      if (d.length > 4) return `${d.slice(0, 2)}***${d.slice(-2)}`;
+      return "***";
+    }
+    const mail = String(email || "").trim();
+    if (mail.includes("@")) {
+      const [local, domain] = mail.split("@");
+      return `${local.slice(0, 2)}***@${domain}`;
+    }
+    return "Verificado";
+  }
+
+  function loadStudent() {
+    try { return JSON.parse(localStorage.getItem(STUDENT_KEY) || "null"); }
+    catch (e) { return null; }
+  }
+  function saveStudent(st) {
+    try { localStorage.setItem(STUDENT_KEY, JSON.stringify(st)); } catch (e) {}
+  }
+  function loadCerts() {
+    try { return JSON.parse(localStorage.getItem(CERTS_KEY) || "[]"); }
+    catch (e) { return []; }
+  }
+  function saveCerts(list) {
+    try { localStorage.setItem(CERTS_KEY, JSON.stringify(list)); } catch (e) {}
+  }
+
+  const cadastroEl = document.getElementById("cadastro");
+  const staticArea = document.getElementById("staticStudentArea");
+  const studentNameBadge = document.getElementById("staticStudentBadge");
+  const logoutBtn = document.getElementById("staticLogoutBtn");
+  const certsHost = document.getElementById("staticCertsHost");
+  const resultHost = document.getElementById("staticResultHost");
+  const certModal = document.getElementById("staticCertModal");
+
+  function openCertificateView(cert, student) {
+    if (!certModal) return;
+    const masked = maskId(student?.documento, student?.email);
+    certModal.innerHTML = `
+      <div class="panel cert-print-card" style="padding:36px; border:2px solid rgba(16, 185, 129, 0.55); background:radial-gradient(circle at top right, rgba(16,185,129,0.12), var(--surface) 60%); margin-bottom:28px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:22px; padding-bottom:16px; border-bottom:1px solid var(--border);">
+          <strong style="font-size:1.18rem;">Heurístika Academia Quantitativa</strong>
+          <span class="badge badge-buy">AUTENTICIDADE VERIFICADA</span>
+        </div>
+        <div class="mono" style="font-size:0.78rem; color:#34d399; letter-spacing:0.12em;">CERTIFICADO DE CONCLUSÃO &amp; PROFICIÊNCIA QUANTITATIVA</div>
+        <h2 style="margin:10px 0 16px; font-size:clamp(1.6rem, 3vw, 2.3rem);">${esc(student?.nome || "Aluno Heurístika")}</h2>
+        <p style="font-size:0.96rem; color:var(--text-soft); line-height:1.7; margin-bottom:22px;">
+          Concluiu com êxito a trilha educacional e foi aprovado(a) no <strong>Exame Avançado de Heurística Financeira, Gestão de Risco Quantitativa, Alocação Multi-Horizonte e Derivativos</strong>, obtendo aproveitamento de <strong class="text-green">${Math.round(cert.nota_pct)}% (${cert.acertos}/${cert.total} questões)</strong>.
+        </p>
+        <div class="kpi-grid" style="margin-bottom:22px;">
+          <div class="kpi-card"><div class="kpi-label">Código Verificador</div><div class="kpi-value" style="font-size:1.05rem; color:#34d399;">${esc(cert.codigo)}</div></div>
+          <div class="kpi-card"><div class="kpi-label">Data de Emissão</div><div class="kpi-value" style="font-size:1.05rem;">${esc(cert.emitido_em)}</div></div>
+          <div class="kpi-card"><div class="kpi-label">Identificação</div><div class="kpi-value" style="font-size:1.02rem;">${esc(masked)}</div></div>
+        </div>
+        <div class="no-print" style="display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap;">
+          <button type="button" class="btn btn-sm btn-electric" onclick="window.print()">Imprimir / Salvar PDF</button>
+          <button type="button" class="btn btn-sm btn-outline" id="closeStaticCertBtn">Fechar Visualização</button>
+        </div>
+      </div>
+    `;
+    certModal.style.display = "block";
+    certModal.scrollIntoView({ behavior: "smooth", block: "center" });
+    document.getElementById("closeStaticCertBtn")?.addEventListener("click", () => {
+      certModal.style.display = "none";
+    });
+  }
+
+  function renderCertsList(student) {
+    if (!certsHost) return;
+    const certs = loadCerts().filter(c => c.email === student?.email);
+    if (!certs.length) {
+      certsHost.innerHTML = "";
+      return;
+    }
+    certsHost.innerHTML = `
+      <div class="panel" style="margin-bottom:24px; border-color:rgba(16,185,129,0.4);">
+        <h2 style="margin:0 0 12px; font-size:1.15rem;">Seus Certificados Emitidos</h2>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          ${certs.map((c, idx) => `
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; background:var(--surface-2); padding:12px 14px; border-radius:10px; border:1px solid var(--border);">
+              <div>
+                <strong class="mono text-green">${esc(c.codigo)}</strong>
+                <span style="color:var(--muted); font-size:0.84rem; margin-left:8px;">Nota: ${Math.round(c.nota_pct)}% (${c.acertos}/${c.total}) • Emitido em ${esc(c.emitido_em)}</span>
+              </div>
+              <button type="button" class="btn btn-sm btn-electric open-static-cert-btn" data-cert-idx="${idx}">Abrir Certificado ↗</button>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `;
+    certsHost.querySelectorAll(".open-static-cert-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const c = certs[Number(btn.dataset.certIdx || 0)];
+        if (c) openCertificateView(c, student);
+      });
+    });
+  }
+
+  function syncAuthUi() {
+    const st = loadStudent();
+    const goExamBtns = document.querySelectorAll('a[href="#cadastro"], a[href="#prova"]');
+    if (st && st.nome && st.email) {
+      if (cadastroEl) cadastroEl.style.display = "none";
+      if (staticArea) staticArea.style.display = "block";
+      if (studentNameBadge) studentNameBadge.textContent = "ALUNO: " + String(st.nome).toUpperCase();
+      goExamBtns.forEach(a => a.setAttribute("href", "#prova"));
+      renderCertsList(st);
+    } else {
+      if (cadastroEl) cadastroEl.style.display = "";
+      if (staticArea) staticArea.style.display = "none";
+      goExamBtns.forEach(a => a.setAttribute("href", "#cadastro"));
+    }
+  }
+
+  document.querySelectorAll('form[action$="/academia/cadastro"]').forEach(form => {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const nome = (form.querySelector('[name="nome"]')?.value || "").trim();
+      const email = (form.querySelector('[name="email"]')?.value || "").trim().toLowerCase();
+      const documento = (form.querySelector('[name="documento"]')?.value || "").trim();
+      const pin = (form.querySelector('[name="pin"]')?.value || "").trim();
+      if (nome.length < 3 || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || pin.length < 4) {
+        if (window.hkToast) window.hkToast("Preencha nome completo, e-mail válido e PIN de 4+ dígitos.", "warning");
+        return;
+      }
+      saveStudent({ nome, email, documento, pin });
+      syncAuthUi();
+      if (window.hkToast) window.hkToast(`Cadastro concluído, ${nome}! Prova liberada.`, "success");
+      document.getElementById("prova")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+
+  document.querySelectorAll('form[action$="/academia/login"]').forEach(form => {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = (form.querySelector('[name="email"]')?.value || "").trim().toLowerCase();
+      const pin = (form.querySelector('[name="pin"]')?.value || "").trim();
+      const existing = loadStudent();
+      if (existing && existing.email === email && existing.pin === pin) {
+        syncAuthUi();
+        if (window.hkToast) window.hkToast(`Bem-vindo(a) de volta, ${existing.nome}!`, "success");
+        document.getElementById("prova")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else if (email.includes("@") && pin.length >= 4) {
+        const guessedName = existing?.nome || email.split("@")[0];
+        saveStudent({ nome: guessedName, email, documento: existing?.documento || "", pin });
+        syncAuthUi();
+        if (window.hkToast) window.hkToast(`Acesso liberado para ${guessedName}!`, "success");
+        document.getElementById("prova")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        if (window.hkToast) window.hkToast("Informe um e-mail válido e seu PIN de 4+ dígitos.", "warning");
+      }
+    });
+  });
+
+  logoutBtn?.addEventListener("click", () => {
+    try { localStorage.removeItem(STUDENT_KEY); } catch (e) {}
+    if (resultHost) resultHost.innerHTML = "";
+    if (certModal) certModal.style.display = "none";
+    syncAuthUi();
+    if (window.hkToast) window.hkToast("Você saiu da conta de aluno.", "success");
+  });
+
+  const examForm = document.getElementById("examForm");
+  if (examForm) {
+    examForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const st = loadStudent();
+      if (!st) {
+        if (window.hkToast) window.hkToast("Cadastre-se antes de enviar a prova.", "warning");
+        return;
+      }
+      let acertos = 0;
+      const revisao = [];
+      for (const q of QUESTIONS) {
+        const checked = examForm.querySelector(`input[name="${q.id}"]:checked`);
+        if (!checked) return;
+        const val = checked.value.toLowerCase();
+        const ok = val === q.correta;
+        if (ok) acertos++;
+        revisao.push({
+          enunciado: q.enunciado,
+          acertou: ok,
+          resposta_usuario: val.toUpperCase(),
+          correta: q.correta.toUpperCase(),
+          explicacao: q.explicacao,
+        });
+      }
+      const total = QUESTIONS.length || 10;
+      const nota_pct = Math.round((acertos / total) * 1000) / 10;
+      const aprovado = nota_pct >= 70;
+      let certObj = null;
+      if (aprovado) {
+        const hex1 = Math.floor(1000 + Math.random() * 9000).toString(16).toUpperCase();
+        const hex2 = Math.floor(1000 + Math.random() * 9000).toString(16).toUpperCase();
+        const now = new Date();
+        const dtStr = now.toLocaleDateString("pt-BR") + " " + now.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+        certObj = {
+          codigo: `CERT-HRK-${hex1}-${hex2}`,
+          nota_pct,
+          acertos,
+          total,
+          emitido_em: dtStr,
+          email: st.email,
+        };
+        const allCerts = loadCerts();
+        allCerts.unshift(certObj);
+        saveCerts(allCerts);
+        renderCertsList(st);
+      }
+
+      if (resultHost) {
+        resultHost.innerHTML = `
+          <div class="panel" style="margin-bottom:28px; border-color:${aprovado ? 'rgba(16,185,129,0.5)' : 'rgba(255,71,87,0.45)'};" id="resultado-prova">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
+              <div>
+                <span class="badge ${aprovado ? 'badge-buy' : 'badge-loss'}">
+                  ${aprovado ? 'APROVADO NA CERTIFICAÇÃO' : 'NÃO APROVADO (MÍNIMO 70%)'}
+                </span>
+                <h2 style="margin:8px 0 0;">Nota Final: ${Math.round(nota_pct)}% (${acertos}/${total})</h2>
+              </div>
+              ${certObj ? `<button type="button" class="btn btn-electric" id="viewLatestStaticCertBtn">Visualizar Certificado (${esc(certObj.codigo)})</button>` : ''}
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              ${revisao.map(r => `
+                <div style="background:var(--surface-2); padding:10px 12px; border-radius:8px; font-size:0.84rem;">
+                  <strong class="${r.acertou ? 'text-green' : 'text-red'}">${r.acertou ? '✓ CORRETA' : '✕ INCORRETA'}</strong> — ${esc(r.enunciado)}
+                  <div class="mono" style="font-size:0.76rem; color:var(--text-soft); margin-top:4px;">
+                    Sua resposta: <strong>${esc(r.resposta_usuario)}</strong>${!r.acertou ? ` • Correta: <strong class="text-green">${esc(r.correta)}</strong>` : ''}
+                  </div>
+                  <div style="color:var(--muted); margin-top:4px;">${esc(r.explicacao)}</div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `;
+        document.getElementById("viewLatestStaticCertBtn")?.addEventListener("click", () => {
+          if (certObj) openCertificateView(certObj, st);
+        });
+        document.getElementById("resultado-prova")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+      if (window.hkToast) {
+        window.hkToast(
+          aprovado
+            ? `Parabéns! Aprovado com ${Math.round(nota_pct)}%. Certificado emitido!`
+            : `Nota: ${Math.round(nota_pct)}%. Atingir 70% (7/10) para emitir certificado.`,
+          aprovado ? "success" : "warning"
+        );
+      }
+    });
+  }
+
+  syncAuthUi();
+})();
+</script>
+
+</body>
+</html>
